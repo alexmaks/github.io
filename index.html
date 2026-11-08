@@ -1,0 +1,630 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Александр Максимовских</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="Интеграции по API, макросы, скрипты и сервисы под ключ для логистики и производства.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700&family=Onest:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: инженерный лист — узкая колонка текста, кейсы как листы с «штампом» слева, поток данных в шапке */
+:root{
+  --paper:#F2F4F3;
+  --sheet:#FFFFFF;
+  --ink:#141B19;
+  --ink-2:#4A5652;
+  --rule:#D5DCD9;
+  --accent:#2340C4;
+  --accent-soft:#E3E8FB;
+  --ok:#1F7A4D;
+  --warn:#A45A00;
+  --f-display:"Unbounded", "Arial Black", system-ui, sans-serif;
+  --f-body:"Onest", "Segoe UI", system-ui, sans-serif;
+  --f-mono:"JetBrains Mono", Consolas, "Courier New", monospace;
+  --s-1:.75rem; --s-2:1.25rem; --s-3:2rem; --s-4:3.5rem; --s-5:6rem;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#0F1413; --sheet:#161D1B; --ink:#E6ECEA; --ink-2:#9AA8A3; --rule:#2A3532;
+    --accent:#8FA3FF; --accent-soft:#1E2747; --ok:#5CC592; --warn:#E3A452; color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#0F1413; --sheet:#161D1B; --ink:#E6ECEA; --ink-2:#9AA8A3; --rule:#2A3532;
+  --accent:#8FA3FF; --accent-soft:#1E2747; --ok:#5CC592; --warn:#E3A452; color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{background:var(--paper);color:var(--ink);font:400 1rem/1.6 var(--f-body);-webkit-font-smoothing:antialiased}
+.wrap{max-width:1120px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+h1,h2,h3{font-family:var(--f-display);font-weight:700;line-height:1.12;text-wrap:balance;margin:0}
+h2{font-size:clamp(1.5rem,1.1rem + 1.6vw,2.25rem)}
+h3{font-size:1.2rem;font-weight:500}
+p{margin:0}
+a{color:var(--accent)}
+.label{font:500 .72rem/1.3 var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--ink-2)}
+.num{font-variant-numeric:tabular-nums}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:2px}
+
+/* шапка */
+header.top{border-bottom:1px solid var(--rule)}
+header.top .wrap{display:flex;justify-content:space-between;align-items:center;gap:var(--s-2);padding-block:var(--s-2);flex-wrap:wrap}
+.brand{font:500 .95rem var(--f-mono);letter-spacing:.02em}
+.brand b{font-weight:500;color:var(--accent)}
+nav.top-nav{display:flex;gap:var(--s-2);flex-wrap:wrap}
+nav.top-nav a{color:var(--ink-2);text-decoration:none;font-size:.92rem}
+nav.top-nav a:hover{color:var(--ink)}
+
+/* герой */
+.hero .wrap{padding-block:var(--s-4) var(--s-3);display:grid;gap:var(--s-3)}
+.hero h1{font-size:clamp(2rem,1.2rem + 3.6vw,3.9rem);max-width:17ch;letter-spacing:-.01em}
+.hero h1 em{font-style:normal;color:var(--accent)}
+.lede{font-size:1.15rem;max-width:62ch;color:var(--ink-2)}
+.lede strong{color:var(--ink);font-weight:600}
+.cta-row{display:flex;gap:var(--s-1);flex-wrap:wrap;align-items:center}
+.btn{display:inline-flex;align-items:center;gap:.5rem;font:500 .95rem var(--f-body);padding:.75rem 1.2rem;border-radius:4px;border:1px solid var(--ink);background:var(--ink);color:var(--paper);text-decoration:none;cursor:pointer;transition:transform .15s ease,background .15s ease}
+.btn:hover{transform:translateY(-1px)}
+.btn:active{transform:translateY(0)}
+.btn.ghost{background:transparent;color:var(--ink)}
+.btn.ghost:hover{background:var(--sheet)}
+
+/* поток данных */
+.flow{margin-top:var(--s-2);background:var(--sheet);border:1px solid var(--rule);border-radius:6px;padding:var(--s-2);overflow-x:auto}
+.flow-head{display:flex;justify-content:space-between;gap:var(--s-1);flex-wrap:wrap;margin-bottom:var(--s-2)}
+.flow-line{display:flex;align-items:stretch;gap:0;min-width:760px}
+.node{flex:1;border:1px solid var(--rule);border-radius:4px;padding:.7rem .8rem;background:var(--paper);display:grid;gap:.25rem;align-content:start}
+.node .label{font-size:.66rem}
+.node b{font:500 .95rem var(--f-body)}
+.node small{color:var(--ink-2);font-size:.8rem;line-height:1.35}
+.node.sys{border-color:var(--accent);background:var(--accent-soft)}
+.arrow{flex:0 0 34px;display:grid;place-items:center;color:var(--accent);font:500 1rem var(--f-mono)}
+.flow-foot{margin-top:var(--s-1);color:var(--ink-2);font-size:.85rem}
+
+/* счётчики */
+.facts{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));border-top:1px solid var(--rule);border-bottom:1px solid var(--rule);margin-top:var(--s-3)}
+.fact{padding:var(--s-2) var(--s-1) var(--s-2) 0;display:grid;gap:.3rem}
+.fact + .fact{border-left:1px solid var(--rule);padding-left:var(--s-2)}
+.fact .big{font:700 clamp(1.6rem,1.2rem + 1.4vw,2.3rem)/1 var(--f-display);font-variant-numeric:tabular-nums}
+.fact span:last-child{color:var(--ink-2);font-size:.88rem;line-height:1.35}
+
+section{padding-block:var(--s-4)}
+.sec-head{display:grid;gap:.6rem;margin-bottom:var(--s-3);max-width:70ch}
+.sec-head p{color:var(--ink-2)}
+
+/* услуги */
+.services{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1px;background:var(--rule);border:1px solid var(--rule)}
+.svc{background:var(--sheet);padding:var(--s-3) var(--s-2);display:grid;gap:var(--s-1);align-content:start}
+.svc h3{display:flex;gap:.7rem;align-items:baseline}
+.svc h3 .label{color:var(--accent)}
+.svc ul{margin:0;padding:0;list-style:none;display:grid;gap:.45rem}
+.svc li{padding-left:1.1rem;position:relative;font-size:.95rem}
+.svc li::before{content:"";position:absolute;left:0;top:.62em;width:.45rem;height:1px;background:var(--ink-2)}
+.svc .from{font-size:.85rem;color:var(--ink-2);border-top:1px dashed var(--rule);padding-top:var(--s-1)}
+
+/* боли */
+.pains{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--s-2)}
+.pain{border-top:2px solid var(--ink);padding-top:var(--s-1);display:grid;gap:.4rem}
+.pain b{font-weight:600}
+.pain span{color:var(--ink-2);font-size:.93rem}
+
+/* кейсы */
+.cases{display:grid;gap:var(--s-3)}
+.case{display:grid;grid-template-columns:270px minmax(0,1fr);background:var(--sheet);border:1px solid var(--rule);border-radius:6px;overflow:hidden}
+.stamp{border-right:1px solid var(--rule);display:grid;grid-auto-rows:min-content;font-size:.85rem}
+.stamp > div{padding:.7rem 1rem;border-bottom:1px solid var(--rule);display:grid;gap:.2rem}
+.stamp > div:last-child{border-bottom:0}
+.stamp .code{font:500 1.6rem/1 var(--f-display);color:var(--accent);padding-block:1rem}
+.chips{display:flex;flex-wrap:wrap;gap:.35rem}
+.chip{font:400 .74rem/1.2 var(--f-mono);padding:.25rem .45rem;border:1px solid var(--rule);border-radius:3px;background:var(--paper);white-space:nowrap}
+.chip.api{border-color:var(--accent);color:var(--accent);background:var(--accent-soft)}
+.case-body{padding:var(--s-3) var(--s-3) var(--s-3) var(--s-3);display:grid;gap:var(--s-2);min-width:0}
+.case-body h3{font-size:clamp(1.2rem,1rem + .8vw,1.55rem);font-weight:700}
+.case-tag{color:var(--ink-2);font-size:.98rem;max-width:68ch}
+.bae{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--s-2)}
+.bae > div{display:grid;gap:.4rem;align-content:start}
+.bae p,.bae li{font-size:.95rem}
+.bae ul{margin:0;padding-left:1.1rem;display:grid;gap:.3rem}
+.was .label{color:var(--warn)}
+.now .label{color:var(--ok)}
+.metrics{display:flex;flex-wrap:wrap;gap:0;border-top:1px solid var(--rule);padding-top:var(--s-2)}
+.metric{display:grid;gap:.15rem;padding-right:var(--s-2);margin-right:var(--s-2);border-right:1px solid var(--rule)}
+.metric:last-child{border-right:0;margin-right:0}
+.metric b{font:700 1.35rem/1.1 var(--f-display);font-variant-numeric:tabular-nums}
+.metric span{font-size:.8rem;color:var(--ink-2);max-width:22ch;line-height:1.3}
+.note{font-size:.88rem;color:var(--ink-2);background:var(--paper);border-left:2px solid var(--accent);padding:.7rem .9rem}
+
+/* связка */
+.chain{display:flex;flex-wrap:wrap;gap:.4rem;align-items:center;font-size:.88rem}
+.chain .chip{font-size:.8rem}
+.chain i{font-style:normal;color:var(--ink-2);font-family:var(--f-mono)}
+
+/* мелкие проекты */
+.small-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--s-2)}
+.small{border-top:1px solid var(--ink);padding-top:var(--s-1);display:grid;gap:.45rem;align-content:start}
+.small b{font-weight:600}
+.small p{font-size:.92rem;color:var(--ink-2)}
+
+/* процесс */
+.steps{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:var(--s-2);counter-reset:s}
+.steps li{counter-increment:s;display:grid;gap:.45rem;align-content:start;border-top:1px solid var(--rule);padding-top:var(--s-1)}
+.steps li::before{content:counter(s,decimal-leading-zero);font:500 .8rem var(--f-mono);color:var(--accent)}
+.steps b{font-weight:600}
+.steps p{font-size:.9rem;color:var(--ink-2)}
+.terms{margin-top:var(--s-3);display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--s-2) var(--s-3)}
+.terms > div{display:grid;gap:.35rem;max-width:52ch}
+.terms p{font-size:.93rem}
+
+/* поставка */
+.kit{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--s-1) var(--s-3)}
+.kit div{display:grid;grid-template-columns:1.6rem minmax(0,1fr);gap:.4rem;font-size:.95rem}
+.kit div::before{content:"✓";color:var(--ok);font-family:var(--f-mono)}
+
+/* контакты */
+.contact{background:var(--ink);color:var(--paper)}
+.contact .wrap{padding-block:var(--s-4);display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:var(--s-3);align-items:start}
+.contact h2{color:var(--paper)}
+.contact p{color:color-mix(in srgb,var(--paper) 75%,var(--ink))}
+.contact-list{display:grid;gap:var(--s-1)}
+.c-item{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:.6rem;align-items:center;border:1px solid color-mix(in srgb,var(--paper) 25%,var(--ink));border-radius:4px;padding:.8rem 1rem}
+.c-item .label{color:color-mix(in srgb,var(--paper) 60%,var(--ink))}
+.c-item .val{font:500 1.05rem var(--f-mono);user-select:all;word-break:break-all}
+.copy{font:500 .8rem var(--f-body);background:transparent;color:var(--paper);border:1px solid color-mix(in srgb,var(--paper) 40%,var(--ink));border-radius:3px;padding:.4rem .7rem;cursor:pointer}
+.copy:hover{background:color-mix(in srgb,var(--paper) 12%,var(--ink))}
+.brief{display:grid;gap:.5rem;margin-top:var(--s-2)}
+.brief li{font-size:.95rem}
+.brief ol{margin:0;padding-left:1.2rem;display:grid;gap:.35rem;color:color-mix(in srgb,var(--paper) 80%,var(--ink))}
+footer{padding-block:var(--s-2);font-size:.82rem;color:var(--ink-2)}
+footer .wrap{display:flex;justify-content:space-between;gap:var(--s-1);flex-wrap:wrap}
+
+@media (max-width:900px){
+  .case{grid-template-columns:1fr}
+  .stamp{border-right:0;border-bottom:1px solid var(--rule);grid-template-columns:repeat(2,minmax(0,1fr))}
+  .stamp > div{border-right:1px solid var(--rule)}
+  .stamp > div:nth-child(2n){border-right:0}
+  .steps{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .small-grid,.pains{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .contact .wrap{grid-template-columns:1fr}
+}
+@media (max-width:640px){
+  .facts{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .fact:nth-child(3){border-left:0;padding-left:0}
+  .fact:nth-child(n+3){border-top:1px solid var(--rule)}
+  .services,.bae,.kit,.terms,.small-grid,.pains,.steps{grid-template-columns:1fr}
+  .case-body{padding:var(--s-2)}
+  .stamp{grid-template-columns:1fr}
+  .stamp > div{border-right:0}
+  nav.top-nav{display:none}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <div class="brand">Александр Максимовских <b>/</b> автоматизация</div>
+    <nav class="top-nav" aria-label="Разделы">
+      <a href="#uslugi">Услуги</a>
+      <a href="#keisy">Кейсы</a>
+      <a href="#process">Как работаю</a>
+      <a href="#kontakty">Контакты</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+<section class="hero" aria-labelledby="hero-h">
+  <div class="wrap">
+    <p class="label">Интеграции по API · макросы · скрипты · сервисы под ключ</p>
+    <h1 id="hero-h">Убираю ручную работу <em>между вашими системами</em></h1>
+    <p class="lede">Сотрудник перепечатывает данные со сканов, носит файлы из одной программы в другую, собирает отчёт из трёх выгрузок. Я делаю так, чтобы это происходило само: <strong>подключаю API, пишу макросы и программы</strong>, ставлю их у вас одним файлом и сопровождаю. Работаю с логистикой и производством, потому что больше 15 лет проработал в этих процессах сам.</p>
+    <div class="cta-row">
+      <a class="btn" href="https://t.me/Alex_gypsies" target="_blank" rel="noopener">Написать в Telegram</a>
+      <a class="btn ghost" href="#keisy">Смотреть кейсы</a>
+    </div>
+
+    <div class="flow" role="figure" aria-label="Пример потока данных из кейса CARGO.RUN">
+      <div class="flow-head">
+        <span class="label">Так выглядит типичный проект · кейс «Документы перевозок»</span>
+        <span class="label">работает без человека, по расписанию</span>
+      </div>
+      <div class="flow-line">
+        <div class="node sys"><span class="label">Источник</span><b>Контур.Логистика</b><small>ЭТрН забираются по API каждые 30 мин</small></div>
+        <div class="arrow" aria-hidden="true">→</div>
+        <div class="node"><span class="label">Папка</span><b>Сканы и PDF</b><small>заявки, ТТН, доверенности, УПД, счета</small></div>
+        <div class="arrow" aria-hidden="true">→</div>
+        <div class="node"><span class="label">Распознавание</span><b>Локальный OCR</b><small>водитель, госномера, номера, даты</small></div>
+        <div class="arrow" aria-hidden="true">→</div>
+        <div class="node"><span class="label">Правила</span><b>Подбор рейса</b><small>спорное — человеку, с причиной</small></div>
+        <div class="arrow" aria-hidden="true">→</div>
+        <div class="node sys"><span class="label">Приёмник</span><b>CARGO.RUN</b><small>файл прикреплён к заявке через API</small></div>
+      </div>
+      <p class="flow-foot">Плюс отчёт в Excel о каждом прогоне и журнал: один и тот же файл дважды не уйдёт.</p>
+    </div>
+
+    <div class="facts">
+      <div class="fact"><span class="big num">8</span><span>проектов сдано заказчикам в 2026 году</span></div>
+      <div class="fact"><span class="big num">800+</span><span>автотестов в этих проектах</span></div>
+      <div class="fact"><span class="big num">6</span><span>внешних API подключено: CARGO.RUN, Контур, ОТК, Google, Яндекс&nbsp;360, Атракс</span></div>
+      <div class="fact"><span class="big num">16+ лет</span><span>релевантного опыта</span></div>
+    </div>
+  </div>
+</section>
+
+<section id="uslugi" aria-labelledby="svc-h">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="label">Услуги</p>
+      <h2 id="svc-h">С чем ко мне приходят</h2>
+      <p>Четыре вида работ. Чаще всего проект сочетает два-три из них: например, программа распознаёт документы и сама отправляет их по API.</p>
+    </div>
+    <div class="services">
+      <div class="svc">
+        <h3><span class="label">A</span>Интеграции по API</h3>
+        <ul>
+          <li>Связываю программы, которые «не разговаривают» друг с другом: TMS, ЭДО, 1С, Google Таблицы, почту.</li>
+          <li>Разбираюсь в API, даже если документация неполная: сначала безопасная разведка только чтением.</li>
+          <li>Защита от дублей и ошибочных отправок, повтор при сбоях сети, токены не попадают в логи.</li>
+        </ul>
+        <p class="from">В кейсах: CARGO.RUN, Контур.Логистика, ОТК, Google Sheets, SMTP Яндекс 360, webhook для n8n/Make</p>
+      </div>
+      <div class="svc">
+        <h3><span class="label">B</span>Макросы для программ</h3>
+        <ul>
+          <li>VBA для CorelDRAW, Excel и других офисных и графических программ.</li>
+          <li>Окна с понятными полями, справочники оборудования, проверка введённых данных.</li>
+          <li>Встроенные самотесты: после установки сразу видно, что макрос работает на вашей версии программы.</li>
+        </ul>
+        <p class="from">В кейсах: раскладка этикеток на вал печатной машины в CorelDRAW</p>
+      </div>
+      <div class="svc">
+        <h3><span class="label">C</span>Скрипты и обработка файлов</h3>
+        <ul>
+          <li>Сборка отчёта из нескольких выгрузок Excel: перетащили файлы на значок — получили итог.</li>
+          <li>Распознавание сканов и PDF (OCR), разбор документов на поля.</li>
+          <li>Расчёты и оптимизация: раскладка груза по машинам, подбор партий, сверки.</li>
+        </ul>
+        <p class="from">В кейсах: отчёт по водителям и топливу, погрузка 299 свай на 73 машины</p>
+      </div>
+      <div class="svc">
+        <h3><span class="label">D</span>Сервисы под ключ</h3>
+        <ul>
+          <li>Настольные программы для Windows и локальные веб-приложения с базой данных.</li>
+          <li>Установщик одним файлом, автозапуск, работа по расписанию без участия человека.</li>
+          <li>Внутренние системы учёта: от прототипа на ваших таблицах до рабочей версии.</li>
+        </ul>
+        <p class="from">В кейсах: реестр водителей ОТК, CARGO.RUN Документы, система управления производством</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section aria-labelledby="pain-h" style="padding-top:0">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="label">Узнаёте свою ситуацию?</p>
+      <h2 id="pain-h">Признаки, что пора автоматизировать</h2>
+    </div>
+    <div class="pains">
+      <div class="pain"><b>Перепечатывают со сканов</b><span>Паспорт, ВУ, СТС, накладные вручную переносят в заявку. Долго, и в номерах ошибаются.</span></div>
+      <div class="pain"><b>Носят файлы между системами</b><span>Скачали из одной программы, переименовали, загрузили в другую. Каждый день, по десятку раз.</span></div>
+      <div class="pain"><b>Отчёт собирают руками</b><span>Три выгрузки, ВПР, проверка глазами. Если ошиблись — узнают в конце месяца.</span></div>
+      <div class="pain"><b>Дизайнер или технолог считает вручную</b><span>Раскладка, дисторсия, раскрой, погрузка. Правила есть, но живут в голове одного человека.</span></div>
+      <div class="pain"><b>Таблицы разрослись</b><span>Google-таблицы связаны формулами, одно понятие в трёх местах называется по-разному.</span></div>
+      <div class="pain"><b>Есть API, но никто не подключил</b><span>Сервис даёт ключ интегратора, а пользоваться им некому.</span></div>
+    </div>
+  </div>
+</section>
+
+<section id="keisy" aria-labelledby="cases-h" style="padding-top:0">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="label">Кейсы</p>
+      <h2 id="cases-h">Что уже работает у заказчиков</h2>    </div>
+
+    <div class="cases">
+
+      <article class="case" aria-labelledby="c1">
+        <div class="stamp">
+          <div><span class="label">Лист</span><span class="code">01</span></div>
+          <div><span class="label">Отрасль</span>Грузоперевозки</div>
+          <div><span class="label">Срок</span>18.09 → 20.10.2026, около 25 выпусков</div>
+          <div><span class="label">Тип работ</span>API · OCR · сервис</div>
+          <div><span class="label">Стек</span><div class="chips"><span class="chip">Python</span><span class="chip">PaddleOCR</span><span class="chip">SQLite</span><span class="chip">tkinter</span><span class="chip api">CARGO.RUN API</span></div></div>
+        </div>
+        <div class="case-body">
+          <h3 id="c1">CARGO.RUN Документы: документы сами прикрепляются к рейсам</h3>
+          <p class="case-tag">Программа берёт папку со сканами и электронными документами перевозок, распознаёт их у себя на компьютере, определяет, к какому рейсу относится каждый, и прикрепляет файл к заявке в TMS через API.</p>
+          <div class="bae">
+            <div class="was"><span class="label">Было</span><p>Документовед вручную искал заявку под каждую накладную, доверенность и счёт. У одного экипажа бывает два рейса в день по одному маршруту, перепутать легко.</p></div>
+            <div class="now"><span class="label">Стало</span>
+              <ul>
+                <li>Работает в фоне по расписанию, стартует вместе с Windows.</li>
+                <li>Сканы без текста, повёрнутые и многостраничные читаются локально, без облака.</li>
+                <li>Отправляет только уверенные совпадения. Спорное остаётся человеку с понятной причиной в отчёте.</li>
+                <li>Отчёт Excel о каждом прогоне; повторно один файл не уходит, даже под другим именем.</li>
+              </ul>
+            </div>
+          </div>
+          <div class="metrics">
+            <div class="metric"><b class="num">30 → 44</b><span>уверенных совпадений из 60 реальных документов после доработки правил</span></div>
+            <div class="metric"><b class="num">0</b><span>повторных прикреплений к одной заявке</span></div>
+            <div class="metric"><b class="num">232</b><span>автотеста основной программы</span></div>
+            <div class="metric"><b class="num">~100 КБ</b><span>архив для установки, остальное ставится само</span></div>
+          </div>
+          <p class="note">К программе добавил утилиту, которая скачивает все вложения заявки или заказа и отправляет их клиенту письмом от общего ящика Яндекс 360 (79 тестов).</p>
+        </div>
+      </article>
+
+      <article class="case" aria-labelledby="c2">
+        <div class="stamp">
+          <div><span class="label">Лист</span><span class="code">02</span></div>
+          <div><span class="label">Отрасль</span>Грузоперевозки, работа логиста</div>
+          <div><span class="label">Срок</span>октябрь – ноябрь 2026</div>
+          <div><span class="label">Тип работ</span>API · OCR · веб-сервис</div>
+          <div><span class="label">Стек</span><div class="chips"><span class="chip">Python</span><span class="chip">FastAPI</span><span class="chip">SQLite</span><span class="chip">Chrome-расширение</span><span class="chip api">ОТК API</span><span class="chip api">Google Sheets API</span></div></div>
+        </div>
+        <div class="case-body">
+          <h3 id="c2">Реестр водителей: от сканов паспорта до заявки за минуту</h3>
+          <p class="case-tag">Логист выигрывает торг на площадке и должен вписать в заявку водителя, тягач и прицеп. Раньше перепечатывал всё с паспорта, ВУ и двух СТС. Теперь кладёт сканы в окно программы и проверяет подсвеченные поля.</p>
+          <div class="bae">
+            <div class="was"><span class="label">Было</span><p>Около двадцати полей на каждый рейс вручную: серия и номер паспорта, кем выдан, номер ВУ, госномера, СТС, собственник и его ИНН. Ошибка в цифре — заявку возвращают.</p></div>
+            <div class="now"><span class="label">Стало</span>
+              <ul>
+                <li>Пачка сканов одного рейса раскладывается на пять карточек: паспорт, ВУ, СТС тягача, СТС прицепа, реквизиты.</li>
+                <li>Тягач и прицеп различаются по формату госномера по ГОСТ Р 50577.</li>
+                <li>Отправка на проверку в службу безопасности через API ОТК, выгрузка в Google Таблицу и webhook.</li>
+                <li>Расширение для Chrome само заполняет форму заказа на площадке Атракс.</li>
+                <li>Справочник своих водителей и машин: знакомого водителя не нужно сканировать заново.</li>
+              </ul>
+            </div>
+          </div>
+          <div class="metrics">
+            <div class="metric"><b class="num">~10 с</b><span>распознавание одного документа</span></div>
+            <div class="metric"><b class="num">227</b><span>автотестов</span></div>
+            <div class="metric"><b class="num">1 файл</b><span>установщик .exe без прав администратора</span></div>
+            <div class="metric"><b class="num">localhost</b><span>персональные данные не покидают компьютер</span></div>
+          </div>
+        </div>
+      </article>
+
+      <article class="case" aria-labelledby="c3">
+        <div class="stamp">
+          <div><span class="label">Лист</span><span class="code">03</span></div>
+          <div><span class="label">Отрасль</span>Грузоперевозки, ЭДО</div>
+          <div><span class="label">Срок</span>24.09 → 20.10.2026, 9 версий</div>
+          <div><span class="label">Тип работ</span>API · фоновая служба</div>
+          <div><span class="label">Стек</span><div class="chips"><span class="chip">Python</span><span class="chip">keyring</span><span class="chip">SQLite</span><span class="chip api">Контур.Логистика API</span></div></div>
+        </div>
+        <div class="case-body">
+          <h3 id="c3">Выгрузка электронных накладных из Контур.Логистики</h3>
+          <p class="case-tag">Программа на «компьютере-роботе» забирает завершённые и архивные ЭТрН в PDF и кладёт их в папку на Яндекс Диске. Оттуда их подхватывает программа из кейса 01. Две программы связаны только папкой, поэтому каждую можно менять отдельно.</p>
+          <div class="bae">
+            <div class="was"><span class="label">Было</span><p>Накладные скачивали из личного кабинета по одной и переименовывали вручную.</p></div>
+            <div class="now"><span class="label">Стало</span>
+              <ul>
+                <li>Проверка каждые 30 минут, автозапуск при входе в Windows.</li>
+                <li>Понятные имена: «ЭТрН 12 от 09.09.2026 Контрагент.pdf».</li>
+                <li>Фильтр: весь транспорт, только наёмный или только собственный.</li>
+                <li>Встроенная диагностика связи: VPN, прокси, антивирус, DNS, TLS. Пишет, где именно рвётся соединение.</li>
+                <li>Ключ API хранится в диспетчере учётных данных Windows, а не в файле.</li>
+              </ul>
+            </div>
+          </div>
+          <div class="metrics">
+            <div class="metric"><b class="num">3</b><span>метода API, только чтение: в Контуре ничего не меняется</span></div>
+            <div class="metric"><b class="num">38</b><span>автотестов</span></div>
+            <div class="metric"><b class="num">0</b><span>повторных скачиваний, даже если файл уже перенесли</span></div>
+          </div>
+          <div class="chain" aria-label="Связка программ">
+            <span class="chip api">Контур.Логистика</span><i>→</i><span class="chip">папка Яндекс Диска</span><i>→</i><span class="chip">CARGO.RUN Документы</span><i>→</i><span class="chip api">CARGO.RUN</span><i>→</i><span class="chip">письмо клиенту</span>
+          </div>
+        </div>
+      </article>
+
+      <article class="case" aria-labelledby="c4">
+        <div class="stamp">
+          <div><span class="label">Лист</span><span class="code">04</span></div>
+          <div><span class="label">Отрасль</span>Флексопечать этикеток</div>
+          <div><span class="label">Срок</span>7–10 рабочих дней</div>
+          <div><span class="label">Тип работ</span>макрос</div>
+          <div><span class="label">Стек</span><div class="chips"><span class="chip">VBA</span><span class="chip">CorelDRAW 2026</span><span class="chip">PANTONE+ Solid Coated</span></div></div>
+        </div>
+        <div class="case-body">
+          <h3 id="c4">Раскладка этикеток на вал печатной машины в CorelDRAW</h3>
+          <p class="case-tag">Дизайнер выбирает машину и вал из списка, отмечает краски, нажимает кнопку. Макрос строит готовый к печати лист в новом документе, исходник не трогает.</p>
+          <div class="bae">
+            <div class="was"><span class="label">Было</span><p>Раскладку вдоль вала и по ручьям, сжатие на дисторсию, рельсы с метками и строку красок делали вручную под каждую этикетку.</p></div>
+            <div class="now"><span class="label">Стало</span>
+              <ul>
+                <li>Этикетки раскладываются встык по ручьям и сжимаются на дисторсию по физическому размеру вала.</li>
+                <li>Рельсы берутся из файла дизайнера и подгоняются по длине вала, ряды меток не разрываются.</li>
+                <li>Метки перекрашиваются в выбранные краски, до 10 штук: CMYK и Pantone.</li>
+                <li>Справочник машин и валов редактируется в окне, без программиста.</li>
+              </ul>
+            </div>
+          </div>
+          <div class="metrics">
+            <div class="metric"><b class="num">149 / 149</b><span>самотестов расчётов проходят</span></div>
+            <div class="metric"><b class="num">0,01 мм</b><span>допуск проверки геометрии</span></div>
+            <div class="metric"><b class="num">28</b><span>валов машины в справочнике</span></div>
+            <div class="metric"><b class="num">1 файл</b><span>установка копированием .gms</span></div>
+          </div>
+          <p class="note">Проверено на настоящей этикетке 235 × 105 мм, 4 ручья, 10 красок: лист совпал с тем, что делал дизайнер вручную.</p>
+        </div>
+      </article>
+
+      <article class="case" aria-labelledby="c5">
+        <div class="stamp">
+          <div><span class="label">Лист</span><span class="code">05</span></div>
+          <div><span class="label">Отрасль</span>Производство подъёмного оборудования</div>
+          <div><span class="label">Срок</span>май 2026 – сейчас</div>
+          <div><span class="label">Тип работ</span>система под ключ · интеграции</div>
+          <div><span class="label">Стек</span><div class="chips"><span class="chip">C# / .NET</span><span class="chip">MS SQL Server</span><span class="chip">веб</span><span class="chip api">1С:УНФ</span><span class="chip api">SolidWorks PDM</span><span class="chip api">Битрикс24</span><span class="chip api">Google Sheets</span></div></div>
+        </div>
+        <div class="case-body">
+          <h3 id="c5">VEARA: система управления производством</h3>
+          <p class="case-tag">Своя система для компании, которая собирает подъёмные платформы под заказ. Каталог и цены, конфигуратор и себестоимость, состав изделий, закупки, склады, планирование участков, сменные задания, кадры. Руковожу разработкой, большую часть кода пишут ИИ-агенты по выстроенному мной процессу.</p>
+          <div class="bae">
+            <div class="was"><span class="label">Было</span><p>Учёт в десятках связанных Google-таблиц, 1С и PDM. Одно понятие описано по-разному в разных таблицах, себестоимость и состав изделия расходятся, закупка и цех видят разные данные.</p></div>
+            <div class="now"><span class="label">Стало</span>
+              <ul>
+                <li>Одна база с единым словарём понятий и рабочие места поверх неё.</li>
+                <li>Чтение 1С:УНФ, SolidWorks PDM, Битрикс24 и синхронизация с Google Таблицами по расписанию.</li>
+                <li>Выкат без простоя: два слота сервера, тестовые копии базы, откат одной кнопкой.</li>
+                <li>Прототип «Сервисной корзины»: допы и рекламации собираются из дерева изделия до материалов и выгружаются файлом для 1С.</li>
+              </ul>
+            </div>
+          </div>
+          <div class="metrics">
+            <div class="metric"><b class="num">5 000+</b><span>коммитов</span></div>
+            <div class="metric"><b class="num">337</b><span>миграций базы</span></div>
+            <div class="metric"><b class="num">24</b><span>рабочих приложения, теперь переносятся в веб</span></div>
+            <div class="metric"><b class="num">4</b><span>внешние системы подключены</span></div>
+          </div>
+        </div>
+      </article>
+
+    </div>
+
+    <div class="sec-head" style="margin-top:var(--s-4)">
+      <p class="label">Небольшие задачи</p>
+      <h3>Скрипты, которые экономят часы каждый месяц</h3>
+    </div>
+    <div class="small-grid">
+      <div class="small">
+        <span class="label">Excel · Python → .exe</span>
+        <b>Итоговый отчёт по водителям</b>
+        <p>Три ежемесячные выгрузки (водители, заявки, топливо) перетаскиваются на значок программы. Через секунды открывается итоговый отчёт. На отдельном листе — что не сошлось: заявки без данных, машины без топлива, разные периоды.</p>
+      </div>
+      <div class="small">
+        <span class="label">Оптимизация · Excel</span>
+        <b>Погрузка свай по машинам</b>
+        <p>299 свай десяти типов разного веса нужно было разложить по 73 машинам грузоподъёмностью 21,5 и 27 т. Решил задачу целочисленной оптимизации и выдал раскладку по каждой машине в Excel, с проверкой перегруза.</p>
+      </div>
+      <div class="small">
+        <span class="label">Google Sheets · 1С:УНФ</span>
+        <b>Таблицы → 1С без ручного ввода</b>
+        <p>Подготовка номенклатуры из Google Таблиц к загрузке в 1С: сборка CSV, проверка полей, справочники, понятный отчёт об ошибках.</p>
+      </div>
+      <div class="small">
+        <span class="label">Apps Script</span>
+        <b>BOM150: учёт состава изделий</b>
+        <p>Расчёт производственных задач, материалов и спецификаций в Google Таблицах. Дерево BOM, порядок сборки, деление сборочных единиц.</p>
+      </div>
+      <div class="small">
+        <span class="label">Next.js · Supabase · Telegram</span>
+        <b>PWA-витрина для продавцов</b>
+        <p>Каталог с витринами продавцов, вход через Telegram, ссылки для входа от бота, личные кабинеты.</p>
+      </div>
+      <div class="small">
+        <span class="label">Telegram Bot API · LLM</span>
+        <b>AI-бот для подготовки контента</b>
+        <p>Бот собирает анкету, по цепочке запросов к модели готовит структурированный ответ в JSON и сохраняет историю.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="process" aria-labelledby="proc-h" style="padding-top:0">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="label">Как работаю</p>
+      <h2 id="proc-h">От первого разговора до сдачи</h2>
+      <p>Сначала разбираюсь в процессе, потом пишу код. Годы на складах и в производстве научили меня, что программа, которая не учла исключения, хуже ручной работы.</p>
+    </div>
+    <ol class="steps">
+      <li><b>Разбор процесса</b><p>Созваниваемся, смотрю на реальные файлы и экраны. Записываю, кто что делает и где ошибаются.</p></li>
+      <li><b>Задание и цена</b><p>Короткое ТЗ с критериями приёмки, срок и фиксированная стоимость.</p></li>
+      <li><b>Проверка на ваших данных</b><p>Первая версия прогоняется на настоящих документах. Показываю, что получилось и что не распозналось.</p></li>
+      <li><b>Установка</b><p>Архив или .exe, инструкция на 1–4 страницы. Ставится без администратора и без меня.</p></li>
+      <li><b>Сопровождение</b><p>Правки по замечаниям, архив поддержки для разбора жалоб без доступа к вашему компьютеру.</p></li>
+    </ol>
+    <div class="terms">
+      <div><span class="label">Оплата</span><p>Аванс 20 %. Остальное — после сдачи, когда вы проверите результат на своих файлах.</p></div>
+      <div><span class="label">После сдачи</span><p>Дорабатываю по вашим замечаниям, пока всё не работает так, как договорились. Месяц после сдачи помогаю, если что-то пошло не так.</p></div>
+    </div>
+  </div>
+</section>
+
+<section aria-labelledby="kit-h" style="padding-top:0">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="label">Что вы получаете</p>
+      <h2 id="kit-h">Программа, которую не страшно оставить без присмотра</h2>
+    </div>
+    <div class="kit">
+      <div>Установка одним файлом: нужные компоненты ставятся сами, ярлык и автозапуск создаются.</div>
+      <div>Безопасный режим «показать, что будет сделано» перед первой настоящей отправкой.</div>
+      <div>Журнал действий: ничего не отправляется дважды, ничего не удаляется без следа.</div>
+      <div>Пароли и ключи API не попадают в логи, отчёты и сообщения об ошибках.</div>
+      <div>Автотесты: при доработке старое не ломается незаметно.</div>
+      <div>Отчёт в Excel о каждом запуске, понятный сотруднику без технической подготовки.</div>
+      <div>Встроенная диагностика: если что-то сломалось, программа пишет, где и почему.</div>
+      <div>Инструкция для пользователя и описание для следующего разработчика.</div>
+    </div>
+  </div>
+</section>
+</main>
+
+<section id="kontakty" class="contact" aria-labelledby="ct-h">
+  <div class="wrap">
+    <div>
+      <p class="label" style="color:inherit;opacity:.7">Контакты</p>
+      <h2 id="ct-h">Расскажите, что сотрудники делают руками</h2>
+      <p style="margin-top:var(--s-1)">Работаю удалённо, Челябинск, МСК+2.</p>
+      <div class="brief">
+        <span class="label" style="color:inherit;opacity:.7">Чтобы оценить быстрее, пришлите</span>
+        <ol>
+          <li>Что сейчас делается вручную и сколько раз в день или месяц.</li>
+          <li>В каких программах и сервисах лежат данные.</li>
+          <li>Пример файла или скриншот экрана, если можно.</li>
+        </ol>
+      </div>
+    </div>
+    <div class="contact-list">
+      <div class="c-item">
+        <div><span class="label">Telegram — быстрее всего</span><div class="val" id="v-tg">@Alex_gypsies</div></div>
+        <a class="copy" href="https://t.me/Alex_gypsies" target="_blank" rel="noopener" style="text-decoration:none">Написать</a>
+      </div>
+      <div class="c-item">
+        <div><span class="label">Почта</span><div class="val" id="v-mail">maksimovskikhav@gmail.com</div></div>
+        <button class="copy" type="button" data-copy="v-mail">Копировать</button>
+      </div>
+      <div class="c-item">
+        <div><span class="label">Телефон</span><div class="val" id="v-tel">+7 964 244-22-40</div></div>
+        <button class="copy" type="button" data-copy="v-tel">Копировать</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <span>Александр Максимовских · интеграции, макросы, скрипты, сервисы</span>
+    <span>Обновлено: ноябрь 2026</span>
+  </div>
+</footer>
+
+<script>
+document.querySelectorAll('.copy').forEach(function (btn) {
+  btn.addEventListener('click', function () {
+    var el = document.getElementById(btn.getAttribute('data-copy'));
+    var text = el.textContent.trim();
+    var done = function () { btn.textContent = 'Скопировано'; setTimeout(function () { btn.textContent = 'Копировать'; }, 1800); };
+    var fallback = function () {
+      var r = document.createRange(); r.selectNodeContents(el);
+      var s = window.getSelection(); s.removeAllRanges(); s.addRange(r);
+      btn.textContent = 'Выделено, нажмите Ctrl+C';
+    };
+    try {
+      navigator.clipboard.writeText(text).then(done, fallback);
+    } catch (e) { fallback(); }
+  });
+});
+</script>
+
+</body>
+</html>
