@@ -8,143 +8,151 @@
 <meta name="description" content="Интеграции по API, макросы, скрипты и сервисы под ключ для логистики и производства.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700&family=Onest:wght@400;500;600&family=JetBrains+Mono:wght@500&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@600;700&family=Onest:wght@400;500;600&family=JetBrains+Mono:wght@500&display=swap">
 <style>
-/* Layout: спокойная колонка, один акцентный цвет, разделители только там, где меняется тема */
+/* Дизайн-кит. Layout: одна колонка 1080px; каждый раздел = метка + заголовок H2 + вводная + содержимое; карточки только белые на сером, без рамок */
 :root{
+  /* цвет */
   --paper:#F2F4F3;
-  --sheet:#FFFFFF;
+  --card:#FFFFFF;
   --ink:#141B19;
   --ink-2:#56625E;
   --rule:#D9DFDC;
   --accent:#2340C4;
-  --accent-soft:#E3E8FB;
+  /* шрифты */
   --f-display:"Unbounded", "Arial Black", system-ui, sans-serif;
   --f-body:"Onest", "Segoe UI", system-ui, sans-serif;
   --f-mono:"JetBrains Mono", Consolas, monospace;
-  --gap:clamp(4rem,3rem + 4vw,7rem);
+  /* шкала размеров: всего 7 ступеней на весь лендинг */
+  --fs-h1:clamp(2.1rem, 1.4rem + 3vw, 3.6rem);
+  --fs-h2:clamp(1.5rem, 1.3rem + .9vw, 2rem);
+  --fs-h3:1.25rem;
+  --fs-stat:clamp(1.6rem, 1.35rem + 1vw, 2rem);
+  --fs-lead:1.1875rem;
+  --fs-body:1.0625rem;
+  --fs-small:.9375rem;
+  --fs-label:.75rem;
+  /* отступы */
+  --sp-1:.5rem; --sp-2:1rem; --sp-3:1.5rem; --sp-4:2.5rem;
+  --sp-section:clamp(4rem, 3rem + 4vw, 6.5rem);
+  --radius:12px;
 }
 @media (prefers-color-scheme: dark){
-  :root:not([data-theme="light"]){--paper:#0F1413;--sheet:#161D1B;--ink:#E6ECEA;--ink-2:#9AA8A3;--rule:#26302D;--accent:#8FA3FF;--accent-soft:#1E2747;color-scheme:dark}
+  :root:not([data-theme="light"]){--paper:#0F1413;--card:#171E1C;--ink:#E6ECEA;--ink-2:#9AA8A3;--rule:#28322F;--accent:#8FA3FF;color-scheme:dark}
 }
-:root[data-theme="dark"]{--paper:#0F1413;--sheet:#161D1B;--ink:#E6ECEA;--ink-2:#9AA8A3;--rule:#26302D;--accent:#8FA3FF;--accent-soft:#1E2747;color-scheme:dark}
+:root[data-theme="dark"]{--paper:#0F1413;--card:#171E1C;--ink:#E6ECEA;--ink-2:#9AA8A3;--rule:#28322F;--accent:#8FA3FF;color-scheme:dark}
+
 *{box-sizing:border-box}
 html{scroll-behavior:smooth}
-body{background:var(--paper);color:var(--ink);font:400 1.0625rem/1.6 var(--f-body);-webkit-font-smoothing:antialiased}
+body{background:var(--paper);color:var(--ink);font:400 var(--fs-body)/1.6 var(--f-body);-webkit-font-smoothing:antialiased}
 .wrap{max-width:1080px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
-h1,h2,h3{font-family:var(--f-display);font-weight:700;line-height:1.12;text-wrap:balance;margin:0}
-h2{font-size:clamp(1.6rem,1.2rem + 1.6vw,2.4rem)}
-h3{font-size:clamp(1.15rem,1rem + .6vw,1.45rem)}
 p{margin:0}
 a{color:var(--accent)}
-.eyebrow{font:500 .75rem/1.3 var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--accent)}
-.muted{color:var(--ink-2)}
-.num{font-variant-numeric:tabular-nums}
 :focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:2px}
-section{padding-block:0 var(--gap)}
-.head{display:grid;gap:.75rem;max-width:44rem;margin-bottom:2.5rem}
+.num{font-variant-numeric:tabular-nums}
 
-.btn{display:inline-flex;align-items:center;gap:.55rem;font:500 1rem var(--f-body);padding:.85rem 1.35rem;border-radius:6px;border:1px solid var(--ink);background:var(--ink);color:var(--paper);text-decoration:none;transition:transform .15s ease,opacity .15s ease}
+/* типографика — только эти классы */
+h1,h2,h3{margin:0;text-wrap:balance}
+h1{font:700 var(--fs-h1)/1.08 var(--f-display);letter-spacing:-.015em}
+h2{font:700 var(--fs-h2)/1.15 var(--f-display)}
+h3{font:600 var(--fs-h3)/1.3 var(--f-body)}
+.label{font:500 var(--fs-label)/1.3 var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--accent)}
+.lead{font-size:var(--fs-lead);line-height:1.55;color:var(--ink-2)}
+.small{font-size:var(--fs-small);color:var(--ink-2)}
+.stat{font:700 var(--fs-stat)/1.05 var(--f-display);font-variant-numeric:tabular-nums}
+
+/* раздел */
+section{padding-block:0 var(--sp-section)}
+.head{display:grid;gap:var(--sp-2);max-width:42rem;margin-bottom:var(--sp-4)}
+
+/* кнопки */
+.btn{display:inline-flex;align-items:center;gap:.55rem;font:500 var(--fs-body)/1 var(--f-body);padding:.95rem 1.4rem;border-radius:8px;border:1px solid var(--ink);background:var(--ink);color:var(--paper);text-decoration:none;transition:transform .15s ease}
 .btn:hover{transform:translateY(-1px)}
 .btn.ghost{background:transparent;color:var(--ink);border-color:var(--rule)}
-.btn.small{padding:.5rem .9rem;font-size:.9rem}
+.btn.sm{padding:.6rem 1rem;font-size:var(--fs-small)}
 .btn svg{width:18px;height:18px;flex:none}
 
+/* карточка — единый элемент для услуг, кейсов, задач */
+.card{background:var(--card);border-radius:var(--radius);padding:clamp(1.5rem,1.1rem + 1.5vw,2.25rem);display:grid;gap:var(--sp-2);align-content:start;min-width:0}
+.grid-2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--sp-2)}
+.grid-3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--sp-2)}
+.card .foot{padding-top:var(--sp-2);border-top:1px solid var(--rule);font-size:var(--fs-small)}
+.card .foot b{font-weight:500;color:var(--accent)}
+
 /* шапка */
-.top .wrap{display:flex;justify-content:space-between;align-items:center;gap:1rem;padding-block:1.1rem}
+.top .wrap{display:flex;justify-content:space-between;align-items:center;gap:var(--sp-2);padding-block:var(--sp-2)}
 .brand{font-weight:600}
 .brand span{color:var(--ink-2);font-weight:400}
 
 /* герой */
-.hero .wrap{padding-block:clamp(3rem,2rem + 5vw,6rem) var(--gap);display:grid;gap:1.75rem}
-.hero h1{font-size:clamp(2.1rem,1.2rem + 4vw,4.2rem);max-width:16ch;letter-spacing:-.015em}
+.hero .wrap{padding-block:clamp(3rem,2rem + 5vw,6rem) var(--sp-section);display:grid;gap:var(--sp-3)}
+.hero h1{max-width:16ch}
 .hero h1 em{font-style:normal;color:var(--accent)}
-.lede{font-size:clamp(1.05rem,1rem + .3vw,1.25rem);max-width:40rem;color:var(--ink-2)}
+.hero .lead{max-width:38rem}
 .cta{display:flex;gap:.75rem;flex-wrap:wrap}
-.facts{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:1.5rem;margin-top:1.5rem;padding-top:1.75rem;border-top:1px solid var(--rule)}
-.facts b{display:block;font:700 clamp(1.6rem,1.2rem + 1.4vw,2.3rem)/1 var(--f-display);margin-bottom:.4rem}
-.facts span{font-size:.92rem;color:var(--ink-2);line-height:1.4}
+.facts{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:var(--sp-3);margin-top:var(--sp-3);padding-top:var(--sp-3);border-top:1px solid var(--rule)}
+.facts div{display:grid;gap:var(--sp-1);align-content:start}
 
 /* для кого */
-.fit{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1rem 3rem;list-style:none;margin:0;padding:0}
-.fit li{display:grid;grid-template-columns:1.5rem minmax(0,1fr);gap:.5rem;font-size:1.05rem}
-.fit li::before{content:"→";color:var(--accent);font-family:var(--f-mono)}
-
-/* услуги */
-.svc{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1rem}
-.svc article{background:var(--sheet);border-radius:10px;padding:1.75rem;display:grid;gap:.6rem;align-content:start}
-.svc p{color:var(--ink-2)}
-.svc .ex{font-size:.92rem;color:var(--ink);padding-top:.6rem;border-top:1px solid var(--rule);margin-top:.4rem}
-.svc .ex b{font-weight:500;color:var(--accent)}
+.fit .card{font-weight:500;padding-block:1.25rem}
 
 /* кейсы */
-.cases{display:grid;gap:1rem}
-.case{background:var(--sheet);border-radius:10px;padding:clamp(1.5rem,1rem + 2vw,2.75rem);display:grid;grid-template-columns:minmax(0,1.55fr) minmax(0,1fr);gap:2.5rem}
-.case-main{display:grid;gap:1.1rem;align-content:start;min-width:0}
-.case .meta{font-size:.9rem;color:var(--ink-2)}
-.ba{display:grid;gap:.8rem}
-.ba p{display:grid;grid-template-columns:4.2rem minmax(0,1fr);gap:.75rem}
-.ba p span:first-child{font:500 .75rem/1.9 var(--f-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--ink-2)}
-.stack{font:500 .78rem/1.6 var(--f-mono);color:var(--ink-2)}
-.res{display:grid;gap:1.4rem;align-content:start;border-left:1px solid var(--rule);padding-left:2rem}
-.res div b{display:block;font:700 clamp(1.5rem,1.2rem + 1vw,2rem)/1.05 var(--f-display);color:var(--accent);margin-bottom:.3rem}
-.res div span{font-size:.92rem;color:var(--ink-2);line-height:1.4;display:block}
-
-/* ещё */
-.more{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:2rem;margin-top:3rem}
-.more div{display:grid;gap:.4rem;align-content:start}
-.more b{font-weight:600}
-.more p{font-size:.95rem;color:var(--ink-2)}
+.cases{display:grid;gap:var(--sp-2)}
+.case{grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);gap:var(--sp-4)}
+.case-main{display:grid;gap:var(--sp-2);align-content:start;min-width:0}
+.ba{display:grid;gap:.75rem}
+.ba p{display:grid;grid-template-columns:4.5rem minmax(0,1fr);gap:.75rem}
+.ba .label{color:var(--ink-2);line-height:1.9}
+.stack{font:500 var(--fs-label)/1.7 var(--f-mono);color:var(--ink-2);letter-spacing:.02em}
+.res{display:grid;gap:var(--sp-3);align-content:start;border-left:1px solid var(--rule);padding-left:var(--sp-4)}
+.res div{display:grid;gap:.3rem}
+.res .stat{color:var(--accent)}
 
 /* процесс */
-.steps{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:2rem;counter-reset:s}
-.steps li{counter-increment:s;display:grid;gap:.45rem;align-content:start}
-.steps li::before{content:counter(s);font:700 1.6rem/1 var(--f-display);color:var(--accent)}
-.steps b{font-weight:600}
-.steps p{font-size:.95rem;color:var(--ink-2)}
-.promise{margin-top:3rem;background:var(--sheet);border-radius:10px;padding:1.75rem;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1.5rem 3rem}
-.promise h3{grid-column:1/-1;font-size:1.1rem}
-.promise ul{list-style:none;margin:0;padding:0;display:grid;gap:.6rem}
-.promise li{display:grid;grid-template-columns:1.4rem minmax(0,1fr);gap:.4rem;font-size:.97rem}
-.promise li::before{content:"✓";color:var(--accent);font-weight:600}
+.steps{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:var(--sp-3);counter-reset:s}
+.steps li{counter-increment:s;display:grid;gap:var(--sp-1);align-content:start}
+.steps li::before{content:counter(s);font:700 var(--fs-stat)/1 var(--f-display);color:var(--accent)}
+.included{margin-top:var(--sp-4)}
+.checks{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.75rem var(--sp-4)}
+.checks li{display:grid;grid-template-columns:1.5rem minmax(0,1fr);gap:.3rem}
+.checks li::before{content:"✓";color:var(--accent);font-weight:600}
 
 /* вопросы */
-.faq{display:grid;max-width:48rem}
-.faq details{border-top:1px solid var(--rule);padding-block:1.1rem}
+.faq{display:grid;max-width:46rem}
+.faq details{border-top:1px solid var(--rule);padding-block:var(--sp-3)}
 .faq details:last-child{border-bottom:1px solid var(--rule)}
-.faq summary{cursor:pointer;font-weight:600;font-size:1.05rem;list-style:none;display:flex;justify-content:space-between;gap:1rem}
+.faq summary{cursor:pointer;font:600 var(--fs-h3)/1.3 var(--f-body);list-style:none;display:flex;justify-content:space-between;gap:var(--sp-2)}
 .faq summary::-webkit-details-marker{display:none}
-.faq summary::after{content:"+";font:500 1.2rem/1 var(--f-mono);color:var(--accent)}
+.faq summary::after{content:"+";font:500 1.25rem/1 var(--f-mono);color:var(--accent)}
 .faq details[open] summary::after{content:"−"}
-.faq details p{margin-top:.7rem;color:var(--ink-2);max-width:42rem}
+.faq details p{margin-top:.75rem;color:var(--ink-2)}
+.faq details p b{color:var(--ink);font-weight:600}
 
 /* контакты */
-.contact{background:var(--ink);color:var(--paper)}
-.contact .wrap{padding-block:var(--gap);display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:3rem;align-items:center}
-.contact h2{color:var(--paper);font-size:clamp(1.7rem,1.2rem + 2vw,2.7rem)}
-.contact p{color:color-mix(in srgb,var(--paper) 72%,var(--ink));margin-top:1rem;max-width:32rem}
-.contact .btn{background:var(--paper);color:var(--ink);border-color:var(--paper);font-size:1.05rem;padding:1rem 1.5rem}
-.c-list{display:grid;gap:1.1rem}
-.c-row{display:flex;justify-content:space-between;align-items:center;gap:1rem;padding-top:1.1rem;border-top:1px solid color-mix(in srgb,var(--paper) 20%,var(--ink))}
-.c-row small{display:block;font-size:.8rem;color:color-mix(in srgb,var(--paper) 60%,var(--ink))}
-.c-row .val{font:500 1.02rem var(--f-mono);user-select:all;word-break:break-all}
-.copy{font:500 .82rem var(--f-body);background:transparent;color:var(--paper);border:1px solid color-mix(in srgb,var(--paper) 35%,var(--ink));border-radius:5px;padding:.4rem .75rem;cursor:pointer;flex:none}
+.contact{background:var(--ink);color:var(--paper);padding-block:var(--sp-section)}
+.contact .wrap{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:var(--sp-4);align-items:center}
+.contact .lead{color:color-mix(in srgb,var(--paper) 72%,var(--ink));margin-top:var(--sp-2)}
+.contact .btn{background:var(--paper);color:var(--ink);border-color:var(--paper);margin-top:var(--sp-3)}
+.c-list{display:grid;gap:var(--sp-2)}
+.c-row{display:flex;justify-content:space-between;align-items:center;gap:var(--sp-2);padding-top:var(--sp-2);border-top:1px solid color-mix(in srgb,var(--paper) 20%,var(--ink))}
+.c-row .label{color:color-mix(in srgb,var(--paper) 60%,var(--ink));display:block;margin-bottom:.25rem}
+.c-row .val{font:500 var(--fs-body) var(--f-mono);user-select:all;word-break:break-all}
+.copy{font:500 var(--fs-small) var(--f-body);background:transparent;color:var(--paper);border:1px solid color-mix(in srgb,var(--paper) 35%,var(--ink));border-radius:6px;padding:.4rem .75rem;cursor:pointer;flex:none}
 .copy:hover{background:color-mix(in srgb,var(--paper) 12%,var(--ink))}
-footer{padding-block:1.25rem;font-size:.85rem;color:var(--ink-2)}
+footer{padding-block:var(--sp-3)}
 
 @media (max-width:860px){
-  .case{grid-template-columns:1fr;gap:1.75rem}
-  .res{border-left:0;padding-left:0;border-top:1px solid var(--rule);padding-top:1.5rem;grid-template-columns:repeat(3,minmax(0,1fr));gap:1rem}
+  .case{grid-template-columns:1fr;gap:var(--sp-3)}
+  .res{border-left:0;padding-left:0;border-top:1px solid var(--rule);padding-top:var(--sp-3);grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--sp-2)}
   .steps{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .grid-3{grid-template-columns:1fr}
   .contact .wrap{grid-template-columns:1fr}
-  .more{grid-template-columns:1fr}
 }
 @media (max-width:620px){
   .facts{grid-template-columns:repeat(2,minmax(0,1fr))}
-  .fit,.svc,.steps,.promise{grid-template-columns:1fr}
-  .res{grid-template-columns:1fr}
+  .grid-2,.steps,.checks,.res{grid-template-columns:1fr}
   .ba p{grid-template-columns:1fr;gap:.1rem}
-  .top .brand span{display:none}
+  .brand span{display:none}
 }
 @media (prefers-reduced-motion:reduce){*{transition:none!important}html{scroll-behavior:auto}}
 </style>
@@ -154,16 +162,16 @@ footer{padding-block:1.25rem;font-size:.85rem;color:var(--ink-2)}
 <header class="top">
   <div class="wrap">
     <div class="brand">Александр Максимовских <span>· автоматизация</span></div>
-    <a class="btn small" href="https://t.me/Alex_gypsies" target="_blank" rel="noopener">Написать</a>
+    <a class="btn sm" href="https://t.me/Alex_gypsies" target="_blank" rel="noopener">Написать</a>
   </div>
 </header>
 
 <main>
 <section class="hero" aria-labelledby="hero-h">
   <div class="wrap">
-    <p class="eyebrow">API-интеграции · макросы · скрипты · сервисы</p>
+    <p class="label">API-интеграции · макросы · скрипты · сервисы</p>
     <h1 id="hero-h">Убираю ручную работу <em>между вашими системами</em></h1>
-    <p class="lede">Сотрудники перепечатывают данные со сканов, переносят файлы из программы в программу, собирают отчёты из выгрузок. Я делаю так, чтобы это происходило само, и ставлю решение у вас одним файлом.</p>
+    <p class="lead">Сотрудники перепечатывают данные со сканов, переносят файлы из программы в программу, собирают отчёты из выгрузок. Я делаю так, чтобы это происходило само, и ставлю решение у вас одним файлом.</p>
     <div class="cta">
       <a class="btn" href="https://t.me/Alex_gypsies" target="_blank" rel="noopener">
         <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M21.9 4.3 18.6 19.8c-.2 1.1-.9 1.4-1.8.9l-5-3.7-2.4 2.3c-.3.3-.5.5-1 .5l.4-5.1 9.3-8.4c.4-.4-.1-.6-.6-.2L6 13.3 1 11.8c-1.1-.3-1.1-1.1.2-1.6L20.5 2.8c.9-.3 1.7.2 1.4 1.5Z"/></svg>
@@ -172,56 +180,57 @@ footer{padding-block:1.25rem;font-size:.85rem;color:var(--ink-2)}
       <a class="btn ghost" href="#cases">Посмотреть кейсы</a>
     </div>
     <div class="facts">
-      <div><b class="num">8</b><span>проектов сдано в 2026 году</span></div>
-      <div><b class="num">6</b><span>подключённых API: CARGO.RUN, Контур, ОТК, Google, Яндекс&nbsp;360, Атракс</span></div>
-      <div><b class="num">800+</b><span>автотестов, чтобы доработки ничего не ломали</span></div>
-      <div><b class="num">16+ лет</b><span>релевантного опыта</span></div>
+      <div><span class="stat">8</span><span class="small">проектов сдано в 2026 году</span></div>
+      <div><span class="stat">6</span><span class="small">подключённых API: CARGO.RUN, Контур, ОТК, Google, Яндекс&nbsp;360, Атракс</span></div>
+      <div><span class="stat">800+</span><span class="small">автотестов, чтобы доработки ничего не ломали</span></div>
+      <div><span class="stat">16+ лет</span><span class="small">релевантного опыта</span></div>
     </div>
   </div>
 </section>
 
-<section aria-labelledby="fit-h">
+<section class="fit" aria-labelledby="fit-h">
   <div class="wrap">
     <div class="head">
+      <p class="label">Для кого</p>
       <h2 id="fit-h">Вам ко мне, если</h2>
     </div>
-    <ul class="fit">
-      <li>Данные со сканов и PDF вбивают в систему вручную</li>
-      <li>Файлы скачивают из одного сервиса и загружают в другой</li>
-      <li>Отчёт каждый месяц собирают из нескольких выгрузок Excel</li>
-      <li>У сервиса есть API, но подключить его некому</li>
-      <li>Дизайнер или технолог часами делает одну и ту же операцию</li>
-      <li>Учёт держится на разросшихся Google-таблицах</li>
-    </ul>
+    <div class="grid-3">
+      <div class="card"><p>Данные со сканов и PDF вбивают в систему вручную</p></div>
+      <div class="card"><p>Файлы скачивают из одного сервиса и загружают в другой</p></div>
+      <div class="card"><p>Отчёт каждый месяц собирают из нескольких выгрузок Excel</p></div>
+      <div class="card"><p>У сервиса есть API, но подключить его некому</p></div>
+      <div class="card"><p>Сотрудник часами повторяет одну и ту же операцию в программе</p></div>
+      <div class="card"><p>Учёт держится на разросшихся Google-таблицах</p></div>
+    </div>
   </div>
 </section>
 
 <section aria-labelledby="svc-h">
   <div class="wrap">
     <div class="head">
-      <p class="eyebrow">Услуги</p>
+      <p class="label">Услуги</p>
       <h2 id="svc-h">Что я делаю</h2>
     </div>
-    <div class="svc">
-      <article>
+    <div class="grid-2">
+      <article class="card">
         <h3>Интеграции по API</h3>
-        <p>Связываю программы, которые не умеют обмениваться данными: TMS, ЭДО, 1С, Google Таблицы, почту. Без дублей и ошибочных отправок.</p>
-        <p class="ex"><b>Пример:</b> накладные из Контура сами попадают в нужные заявки CARGO.RUN</p>
+        <p class="small">Связываю программы, которые не умеют обмениваться данными: TMS, ЭДО, 1С, Google Таблицы, почту. Без дублей и ошибочных отправок.</p>
+        <p class="foot"><b>Пример:</b> накладные из Контура сами попадают в нужные заявки CARGO.RUN</p>
       </article>
-      <article>
+      <article class="card">
         <h3>Макросы</h3>
-        <p>VBA для CorelDRAW, Excel и других программ. Удобное окно, справочники, проверка данных. Работа на час превращается в одну кнопку.</p>
-        <p class="ex"><b>Пример:</b> раскладка этикеток на вал печатной машины в CorelDRAW</p>
+        <p class="small">VBA для CorelDRAW, Excel и других программ. Удобное окно, справочники, проверка данных. Работа на час превращается в одну кнопку.</p>
+        <p class="foot"><b>Пример:</b> раскладка этикеток на вал печатной машины в CorelDRAW</p>
       </article>
-      <article>
+      <article class="card">
         <h3>Скрипты и обработка файлов</h3>
-        <p>Сборка отчётов, распознавание сканов, сверки и расчёты. Перетащили файлы на значок — получили результат.</p>
-        <p class="ex"><b>Пример:</b> итоговый отчёт по водителям и топливу из трёх выгрузок</p>
+        <p class="small">Сборка отчётов, распознавание сканов, сверки и расчёты. Перетащили файлы на значок — получили результат.</p>
+        <p class="foot"><b>Пример:</b> итоговый отчёт по водителям и топливу из трёх выгрузок</p>
       </article>
-      <article>
+      <article class="card">
         <h3>Сервисы под ключ</h3>
-        <p>Программы для Windows и веб-сервисы с базой данных: от прототипа на ваших таблицах до рабочей системы.</p>
-        <p class="ex"><b>Пример:</b> реестр водителей с распознаванием документов и отправкой в ОТК</p>
+        <p class="small">Программы для Windows и веб-сервисы с базой данных: от прототипа на ваших таблицах до рабочей системы.</p>
+        <p class="foot"><b>Пример:</b> реестр водителей с распознаванием документов и отправкой в ОТК</p>
       </article>
     </div>
   </div>
@@ -230,84 +239,140 @@ footer{padding-block:1.25rem;font-size:.85rem;color:var(--ink-2)}
 <section id="cases" aria-labelledby="cases-h">
   <div class="wrap">
     <div class="head">
-      <p class="eyebrow">Кейсы</p>
-      <h2 id="cases-h">Что уже работает у заказчиков</h2>
+      <p class="label">Кейсы</p>
+      <h2 id="cases-h">Крупные проекты, которые уже работают</h2>
     </div>
 
     <div class="cases">
-      <article class="case">
+      <article class="card case">
         <div class="case-main">
-          <p class="meta">Грузоперевозки · API и распознавание документов</p>
+          <p class="small">Грузоперевозки · API и распознавание документов</p>
           <h3>Документы перевозок сами прикрепляются к рейсам</h3>
           <div class="ba">
-            <p><span>Было</span><span>Документовед вручную искал заявку в CARGO.RUN под каждую накладную, доверенность и счёт. При двух рейсах в день по одному маршруту документы путались.</span></p>
-            <p><span>Стало</span><span>Электронные накладные забираются из Контура, сканы распознаются, программа находит рейс и прикрепляет файл через API. Всё спорное остаётся человеку с понятной причиной.</span></p>
+            <p><span class="label">Было</span><span>Документовед вручную искал заявку в CARGO.RUN под каждую накладную, доверенность и счёт. При двух рейсах в день по одному маршруту документы путались.</span></p>
+            <p><span class="label">Стало</span><span>Электронные накладные забираются из Контура, сканы распознаются, программа находит рейс и прикрепляет файл через API. Всё спорное остаётся человеку с понятной причиной.</span></p>
           </div>
           <p class="stack">Python · OCR · CARGO.RUN API · Контур.Логистика API · Яндекс 360</p>
         </div>
         <div class="res">
-          <div><b class="num">44 из 60</b><span>документов прикрепляются автоматически, было 30</span></div>
-          <div><b class="num">0</b><span>ошибочных и повторных прикреплений</span></div>
-          <div><b>Без участия</b><span>человека: работает по расписанию с запуском Windows</span></div>
+          <div><span class="stat">44 из 60</span><span class="small">документов прикрепляются автоматически, было 30</span></div>
+          <div><span class="stat">0</span><span class="small">ошибочных и повторных прикреплений</span></div>
+          <div><span class="stat">232</span><span class="small">автотеста проверяют каждый выпуск</span></div>
         </div>
       </article>
 
-      <article class="case">
+      <article class="card case">
         <div class="case-main">
-          <p class="meta">Логистика · сервис под ключ</p>
+          <p class="small">Логистика · сервис под ключ</p>
           <h3>Данные водителя в заявку за минуту вместо ручного ввода</h3>
           <div class="ba">
-            <p><span>Было</span><span>Логист перепечатывал около двадцати полей с паспорта, ВУ и двух СТС на каждый рейс. Ошибка в цифре — заявку возвращают.</span></p>
-            <p><span>Стало</span><span>Сканы раскладываются по карточкам, поля распознаются и проверяются. Одной кнопкой данные уходят на проверку в ОТК, в Google Таблицу, а расширение браузера заполняет заявку на площадке.</span></p>
+            <p><span class="label">Было</span><span>Логист перепечатывал около двадцати полей с паспорта, ВУ и двух СТС на каждый рейс. Ошибка в цифре — заявку возвращают.</span></p>
+            <p><span class="label">Стало</span><span>Сканы раскладываются по карточкам, поля распознаются и проверяются. Одной кнопкой данные уходят на проверку в ОТК и в Google Таблицу, а расширение браузера заполняет заявку на площадке.</span></p>
           </div>
           <p class="stack">Python · FastAPI · OCR · ОТК API · Google Sheets API · Chrome</p>
         </div>
         <div class="res">
-          <div><b class="num">~10 сек</b><span>на распознавание документа</span></div>
-          <div><b>1 файл</b><span>установщик, без прав администратора</span></div>
-          <div><b>Локально</b><span>персональные данные не уходят в облако</span></div>
+          <div><span class="stat">~10 сек</span><span class="small">на распознавание документа</span></div>
+          <div><span class="stat">1 файл</span><span class="small">установщик, без прав администратора</span></div>
+          <div><span class="stat">0</span><span class="small">персональных данных уходит в облако</span></div>
         </div>
       </article>
 
-      <article class="case">
+      <article class="card case">
         <div class="case-main">
-          <p class="meta">Флексопечать · макрос</p>
+          <p class="small">Производство · интеграция с 1С</p>
+          <h3>Документы производства в 1С заполняются и проводятся по кнопке</h3>
+          <div class="ba">
+            <p><span class="label">Было</span><span>Бухгалтер вручную переносил строки из общей Google-таблицы в документы производства 1С, заполнял реквизиты и проводил каждый документ.</span></p>
+            <p><span class="label">Стало</span><span>Скрипт готовит из таблиц файл для загрузки. Внешняя обработка 1С по кнопке подтягивает в документ нужные строки, ставит реквизиты, проводит документ и записывает журнал операций.</span></p>
+          </div>
+          <p class="stack">Google Sheets · CSV · 1С:УНФ · внешняя обработка 1С</p>
+        </div>
+        <div class="res">
+          <div><span class="stat">10 мин → 5 сек</span><span class="small">на один документ: было минимум 10 минут ручной работы</span></div>
+          <div><span class="stat">0 ошибок</span><span class="small">в реквизитах: строки и поля подставляются из таблицы</span></div>
+          <div><span class="stat">1 кнопка</span><span class="small">документ заполнен, проведён, операция записана в журнал</span></div>
+        </div>
+      </article>
+
+      <article class="card case">
+        <div class="case-main">
+          <p class="small">Производство и сервис · веб-сервис, прототип</p>
+          <h3>Сервис-менеджер собирает замену по рекламации сам, без инженера</h3>
+          <div class="ba">
+            <p><span class="label">Было</span><span>Сервис-менеджеры не знают тонкостей конструкции: из чего состоит узел и по какой спецификации он делается. На каждый доп или рекламацию они шли к инженерам, и те отвлекались от своей работы. Всё занимало много времени.</span></p>
+            <p><span class="label">Стало</span><span>Приложение «Сервисная корзина»: менеджер вводит номер заказа, видит изделие деревом и отмечает элемент, который нужно заменить. Сразу получает полную спецификацию до материалов и готовый файл для вставки в 1С.</span></p>
+          </div>
+          <p class="stack">Веб · дерево изделия из базы производства · выгрузка для 1С</p>
+        </div>
+        <div class="res">
+          <div><span class="stat">0</span><span class="small">отвлечений инженеров: менеджер справляется сам</span></div>
+          <div><span class="stat">Сразу</span><span class="small">полная спецификация узла до материалов</span></div>
+          <div><span class="stat">1 файл</span><span class="small">с данными для вставки в 1С</span></div>
+        </div>
+      </article>
+
+      <article class="card case">
+        <div class="case-main">
+          <p class="small">Флексопечать · макрос</p>
           <h3>Раскладка этикеток в CorelDRAW одной кнопкой</h3>
           <div class="ba">
-            <p><span>Было</span><span>Дизайнер вручную раскладывал этикетки по валу, сжимал на дисторсию, ставил рельсы с метками и подписывал краски.</span></p>
-            <p><span>Стало</span><span>Дизайнер выбирает машину, вал и краски из списка. Макрос строит готовый к печати лист в новом документе, исходник не меняется.</span></p>
+            <p><span class="label">Было</span><span>Дизайнер вручную раскладывал этикетки по валу, сжимал на дисторсию, ставил рельсы с метками и подписывал краски.</span></p>
+            <p><span class="label">Стало</span><span>Дизайнер выбирает машину, вал и краски из списка. Макрос строит готовый к печати лист в новом документе, исходник не меняется.</span></p>
           </div>
           <p class="stack">VBA · CorelDRAW · PANTONE+</p>
         </div>
         <div class="res">
-          <div><b class="num">0,01 мм</b><span>точность геометрии, проверена тестами</span></div>
-          <div><b class="num">7–10 дней</b><span>от данных по машинам до сдачи</span></div>
-          <div><b>1 файл</b><span>установка копированием</span></div>
+          <div><span class="stat">0,01 мм</span><span class="small">точность геометрии, проверена тестами</span></div>
+          <div><span class="stat">7–10 дней</span><span class="small">от данных по машинам до сдачи</span></div>
+          <div><span class="stat">1 файл</span><span class="small">установка копированием</span></div>
         </div>
       </article>
 
-      <article class="case">
+      <article class="card case">
         <div class="case-main">
-          <p class="meta">Производство · система под ключ</p>
+          <p class="small">Производство · система под ключ</p>
           <h3>Система управления производством вместо десятков таблиц</h3>
           <div class="ba">
-            <p><span>Было</span><span>Учёт в связанных Google-таблицах, 1С и PDM. Себестоимость и состав изделий расходились, закупка и цех видели разные данные.</span></p>
-            <p><span>Стало</span><span>Одна база с единым справочником: каталог и цены, расчёт себестоимости, закупки, склады, планирование цехов. Данные из 1С, PDM, Битрикс24 и таблиц подтягиваются сами.</span></p>
+            <p><span class="label">Было</span><span>Учёт в связанных Google-таблицах, 1С и PDM. Себестоимость и состав изделий расходились, закупка и цех видели разные данные.</span></p>
+            <p><span class="label">Стало</span><span>Одна база с единым справочником: каталог и цены, расчёт себестоимости, закупки, склады, планирование цехов. Данные из 1С, PDM, Битрикс24 и таблиц подтягиваются сами.</span></p>
           </div>
           <p class="stack">C# · .NET · MS SQL Server · 1С:УНФ · SolidWorks PDM · Битрикс24</p>
         </div>
         <div class="res">
-          <div><b class="num">24</b><span>приложения на одной базе</span></div>
-          <div><b class="num">4</b><span>внешние системы подключены</span></div>
-          <div><b class="num">5 000+</b><span>изменений за полгода разработки</span></div>
+          <div><span class="stat">24</span><span class="small">приложения на одной базе</span></div>
+          <div><span class="stat">4</span><span class="small">внешние системы подключены</span></div>
+          <div><span class="stat">5 000+</span><span class="small">изменений за полгода разработки</span></div>
         </div>
       </article>
     </div>
+  </div>
+</section>
 
-    <div class="more">
-      <div><b>Отчёт из трёх выгрузок</b><p>Файлы перетаскиваются на значок — открывается итоговый отчёт по водителям и топливу с листом расхождений.</p></div>
-      <div><b>Погрузка 299 свай на 73 машины</b><p>Оптимальная раскладка свай разного веса по машинам 21,5 и 27 т, результат в Excel.</p></div>
-      <div><b>Google Таблицы → 1С:УНФ</b><p>Подготовка номенклатуры к загрузке в 1С с проверкой полей и отчётом об ошибках.</p></div>
+<section aria-labelledby="quick-h">
+  <div class="wrap">
+    <div class="head">
+      <p class="label">Небольшие задачи</p>
+      <h2 id="quick-h">Не нужна большая система? Хватит небольшого решения</h2>
+      <p class="lead">Часть задач решается за несколько дней: скрипт, который сотрудник запускает сам, или простое приложение под одну задачу. Вот три такие.</p>
+    </div>
+    <div class="grid-3">
+      <article class="card">
+        <span class="label">Excel</span>
+        <h3>Отчёт из трёх выгрузок</h3>
+        <p class="small">Каждый месяц водителей, заявки и топливо сводили вручную. Теперь сотрудник перетаскивает три файла на значок и сразу получает итоговый отчёт с листом расхождений.</p>
+      </article>
+      <article class="card">
+        <span class="label">Планирование транспорта</span>
+        <h3>Оптимальная погрузка по машинам</h3>
+        <p class="small">Указываете, какие грузы и сколько они весят, и какие машины есть в наличии. Расчёт подбирает раскладку без перегруза и с минимумом рейсов и выдаёт план по каждой машине в Excel. На реальной задаче: 299 свай десяти типов на 73 машины по 21,5 и 27 т.</p>
+      </article>
+      <article class="card">
+        <span class="label">Мобильное приложение</span>
+        <h3>«Витрина в кармане» для мастера</h3>
+        <p class="small">Мастер рассылал клиентам фото и цены в личку по одному. Сделал ему каталог в телефоне: он сам добавляет товары, цены и скидки и делится одной ссылкой. Клиент смотрит весь ассортимент и сразу пишет мастеру. Витрину можно сохранить на главный экран и открывать как обычное приложение.</p>
+        <p class="foot"><a href="https://vitrina-kappa.vercel.app/" target="_blank" rel="noopener">Открыть витрину →</a></p>
+      </article>
     </div>
   </div>
 </section>
@@ -315,23 +380,21 @@ footer{padding-block:1.25rem;font-size:.85rem;color:var(--ink-2)}
 <section aria-labelledby="proc-h">
   <div class="wrap">
     <div class="head">
-      <p class="eyebrow">Как работаю</p>
-      <h2 id="proc-h">Просто и прозрачно</h2>
+      <p class="label">Как работаю</p>
+      <h2 id="proc-h">Четыре шага от задачи до результата</h2>
     </div>
     <ol class="steps">
-      <li><b>Разговор</b><p>Рассказываете задачу, показываете файлы или экран. Называю срок и цену.</p></li>
-      <li><b>Аванс 20 %</b><p>Фиксируем в переписке, что должно получиться, и я начинаю.</p></li>
-      <li><b>Проверка</b><p>Прогоняю решение на ваших настоящих данных и показываю результат.</p></li>
-      <li><b>Сдача</b><p>Ставлю у вас, вы проверяете и оплачиваете остаток.</p></li>
+      <li><h3>Обсуждение</h3><p class="small">Рассказываете задачу, показываете файлы или экран. Называю срок и цену.</p></li>
+      <li><h3>Аванс 20 %</h3><p class="small">Фиксируем в переписке, что должно получиться, и я начинаю.</p></li>
+      <li><h3>Проверка</h3><p class="small">Прогоняю решение на ваших настоящих данных и показываю результат.</p></li>
+      <li><h3>Сдача</h3><p class="small">Ставлю у вас, вы проверяете и оплачиваете остаток.</p></li>
     </ol>
-    <div class="promise">
+    <div class="card included">
       <h3>Что входит в каждый проект</h3>
-      <ul>
+      <ul class="checks">
         <li>Установка одним файлом и короткая инструкция</li>
-        <li>Доработки по вашим замечаниям, пока всё не работает как договорились</li>
-      </ul>
-      <ul>
         <li>Защита от дублей и ошибок, ключи и пароли не попадают в логи</li>
+        <li>Доработки по вашим замечаниям, пока всё не работает как договорились</li>
         <li>Месяц помощи после сдачи, если что-то пошло не так</li>
       </ul>
     </div>
@@ -341,17 +404,17 @@ footer{padding-block:1.25rem;font-size:.85rem;color:var(--ink-2)}
 <section aria-labelledby="faq-h">
   <div class="wrap">
     <div class="head">
-      <p class="eyebrow">Вопросы</p>
+      <p class="label">Вопросы</p>
       <h2 id="faq-h">Частые вопросы</h2>
     </div>
     <div class="faq">
       <details>
         <summary>Сколько стоит?</summary>
-        <p>Зависит от задачи. Называю цену после короткого разговора, когда вижу ваши файлы и программы. Цену называю до начала работы.</p>
+        <p>Цена зависит от многих деталей: какие программы участвуют, в каком виде данные, сколько исключений нужно учесть. Поэтому точную стоимость называю после обсуждения задачи и до начала работы. Для ориентира: <b>час работы — около 2 000 ₽</b>.</p>
       </details>
       <details>
         <summary>Что если у нашей программы нет API?</summary>
-        <p>Есть другие пути: обмен через папку, выгрузки Excel и CSV, макрос внутри программы, заполнение формы в браузере. Подберу рабочий вариант.</p>
+        <p>Есть другие пути. Например, расширение для Google Chrome, которое само заполняет формы на сайте сервиса: так сделано для торговой площадки в кейсе с водителями. Ещё варианты — обмен через папку, выгрузки Excel и CSV, макрос внутри программы. Подберу рабочий.</p>
       </details>
       <details>
         <summary>Нам нужно что-то устанавливать или покупать?</summary>
@@ -374,22 +437,30 @@ footer{padding-block:1.25rem;font-size:.85rem;color:var(--ink-2)}
   <div class="wrap">
     <div>
       <h2 id="ct-h">Расскажите, что у вас делается вручную</h2>
-      <p>Опишите задачу в двух словах и, если можно, приложите пример файла. Предложу решение, срок и цену.</p>
-      <p style="margin-top:1.75rem"><a class="btn" href="https://t.me/Alex_gypsies" target="_blank" rel="noopener">Написать в Telegram</a></p>
+      <p class="lead">Напишите, как есть, даже если задача кажется запутанной. Вместе разберёмся в процессе и найдём решение, которое сэкономит вашим сотрудникам время.</p>
+      <a class="btn" href="https://t.me/Alex_gypsies" target="_blank" rel="noopener">Написать в Telegram</a>
     </div>
     <div class="c-list">
-      <div class="c-row"><div><small>Telegram</small><span class="val" id="v-tg">@Alex_gypsies</span></div><button class="copy" type="button" data-copy="v-tg">Копировать</button></div>
-      <div class="c-row"><div><small>Почта</small><span class="val" id="v-mail">maksimovskikhav@gmail.com</span></div><button class="copy" type="button" data-copy="v-mail">Копировать</button></div>
-      <div class="c-row"><div><small>Телефон</small><span class="val" id="v-tel">+7 964 244-22-40</span></div><button class="copy" type="button" data-copy="v-tel">Копировать</button></div>
+      <div class="c-row"><div><span class="label">Telegram</span><span class="val" id="v-tg">@Alex_gypsies</span></div><button class="copy" type="button" data-copy="v-tg">Копировать</button></div>
+      <div class="c-row"><div><span class="label">Почта</span><span class="val" id="v-mail">maksimovskikhav@gmail.com</span></div><button class="copy" type="button" data-copy="v-mail">Копировать</button></div>
+      <div class="c-row"><div><span class="label">Телефон</span><span class="val" id="v-tel">+7 964 244-22-40</span></div><button class="copy" type="button" data-copy="v-tel">Копировать</button></div>
     </div>
   </div>
 </section>
 
 <footer>
-  <div class="wrap">Александр Максимовских · Челябинск, работаю удалённо</div>
+  <div class="wrap small">Александр Максимовских · Челябинск, работаю удалённо</div>
 </footer>
 
 <script>
+document.querySelectorAll('a[href^="#"]').forEach(function (a) {
+  a.addEventListener('click', function (e) {
+    var target = document.getElementById(a.getAttribute('href').slice(1));
+    if (!target) return;
+    e.preventDefault();
+    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+});
 document.querySelectorAll('.copy').forEach(function (btn) {
   btn.addEventListener('click', function () {
     var el = document.getElementById(btn.getAttribute('data-copy'));
