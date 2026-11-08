@@ -83,6 +83,11 @@ section{padding-block:0 var(--sp-section)}
 .top .wrap{display:flex;justify-content:space-between;align-items:center;gap:var(--sp-2);padding-block:var(--sp-2)}
 .brand{font-weight:600}
 .brand span{color:var(--ink-2);font-weight:400}
+.top-r{display:flex;align-items:center;gap:.75rem}
+.lang{display:inline-flex;gap:2px;padding:2px;border:1px solid var(--rule);border-radius:8px}
+.lang button{font:500 var(--fs-label)/1 var(--f-mono);letter-spacing:.06em;padding:.55rem .6rem;border:0;border-radius:6px;background:transparent;color:var(--ink-2);cursor:pointer;transition:background .15s ease,color .15s ease}
+.lang button:hover{color:var(--ink)}
+.lang button[aria-pressed="true"]{background:var(--ink);color:var(--paper)}
 
 /* герой */
 .hero .wrap{padding-block:clamp(3rem,2rem + 5vw,6rem) var(--sp-section);display:grid;gap:var(--sp-3)}
@@ -154,6 +159,9 @@ footer{padding-block:var(--sp-3)}
   .ba p{grid-template-columns:1fr;gap:.1rem}
   .brand span{display:none}
 }
+@media (max-width:440px){
+  .top .btn{display:none}
+}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}html{scroll-behavior:auto}}
 </style>
 </head>
@@ -162,7 +170,14 @@ footer{padding-block:var(--sp-3)}
 <header class="top">
   <div class="wrap">
     <div class="brand">Александр Максимовских <span>· автоматизация</span></div>
-    <a class="btn sm" href="https://t.me/Alex_gypsies" target="_blank" rel="noopener">Написать</a>
+    <div class="top-r">
+      <div class="lang" role="group" aria-label="Язык / Language / Idioma">
+        <button type="button" data-lang="ru" aria-pressed="true">RU</button>
+        <button type="button" data-lang="en" aria-pressed="false">EN</button>
+        <button type="button" data-lang="es" aria-pressed="false">ES</button>
+      </div>
+      <a class="btn sm" href="https://t.me/Alex_gypsies" target="_blank" rel="noopener">Написать</a>
+    </div>
   </div>
 </header>
 
@@ -180,7 +195,7 @@ footer{padding-block:var(--sp-3)}
       <a class="btn ghost" href="#cases">Посмотреть кейсы</a>
     </div>
     <div class="facts">
-      <div><span class="stat">8</span><span class="small">проектов сдано в 2026 году</span></div>
+      <div><span class="stat">10+</span><span class="small">проектов сдано в 2026 году</span></div>
       <div><span class="stat">6</span><span class="small">подключённых API: CARGO.RUN, Контур, ОТК, Google, Яндекс&nbsp;360, Атракс</span></div>
       <div><span class="stat">800+</span><span class="small">автотестов, чтобы доработки ничего не ломали</span></div>
       <div><span class="stat">16+ лет</span><span class="small">релевантного опыта</span></div>
@@ -297,7 +312,7 @@ footer{padding-block:var(--sp-3)}
 
       <article class="card case">
         <div class="case-main">
-          <p class="small">Производство и сервис · веб-сервис, прототип</p>
+          <p class="small">Производство и сервис · веб-сервис</p>
           <h3>Сервис-менеджер собирает замену по рекламации сам, без инженера</h3>
           <div class="ba">
             <p><span class="label">Было</span><span>Сервис-менеджеры не знают тонкостей конструкции: из чего состоит узел и по какой спецификации он делается. На каждый доп или рекламацию они шли к инженерам, и те отвлекались от своей работы. Всё занимало много времени.</span></p>
@@ -461,15 +476,217 @@ document.querySelectorAll('a[href^="#"]').forEach(function (a) {
     target.scrollIntoView({ behavior: 'smooth', block: 'start' });
   });
 });
+/* Переводы: ключ — русский текст как в разметке, значение — [английский, испанский].
+   Русский остаётся в HTML; при правке русского текста поправьте ключ здесь. */
+var I18N = {
+"Александр Максимовских": ["Alexander Maksimovskikh", "Alexander Maksimovskikh"],
+"· автоматизация": ["· automation", "· automatización"],
+"Написать": ["Message me", "Escribir"],
+"API-интеграции · макросы · скрипты · сервисы": ["API integrations · macros · scripts · services", "Integraciones API · macros · scripts · servicios"],
+"Убираю ручную работу": ["I eliminate manual work", "Elimino el trabajo manual"],
+"между вашими системами": ["between your systems", "entre sus sistemas"],
+"Сотрудники перепечатывают данные со сканов, переносят файлы из программы в программу, собирают отчёты из выгрузок. Я делаю так, чтобы это происходило само, и ставлю решение у вас одним файлом.": ["Your staff retype data from scans, move files from one program to another and build reports from exports. I make all of this happen automatically and install the solution for you as a single file.", "Sus empleados copian a mano datos de documentos escaneados, pasan archivos de un programa a otro y arman informes a partir de exportaciones. Hago que todo esto ocurra solo e instalo la solución con un único archivo."],
+"Обсудить задачу в Telegram": ["Discuss your task on Telegram", "Hablemos de su tarea en Telegram"],
+"Посмотреть кейсы": ["See case studies", "Ver casos"],
+"проектов сдано в 2026 году": ["projects delivered in 2026", "proyectos entregados en 2026"],
+"подключённых API: CARGO.RUN, Контур, ОТК, Google, Яндекс 360, Атракс": ["connected APIs: CARGO.RUN, Kontur, OTK, Google, Yandex 360, Atrax", "API conectadas: CARGO.RUN, Kontur, OTK, Google, Yandex 360, Atrax"],
+"автотестов, чтобы доработки ничего не ломали": ["automated tests, so changes never break anything", "pruebas automáticas, para que los cambios no rompan nada"],
+"16+ лет": ["16+ years", "16+ años"],
+"релевантного опыта": ["of relevant experience", "de experiencia relevante"],
+"Для кого": ["Who it's for", "Para quién"],
+"Вам ко мне, если": ["I can help if", "Puedo ayudarle si"],
+"Данные со сканов и PDF вбивают в систему вручную": ["Data from scans and PDFs is typed into the system by hand", "Los datos de escaneos y PDF se introducen a mano en el sistema"],
+"Файлы скачивают из одного сервиса и загружают в другой": ["Files are downloaded from one service and uploaded to another", "Los archivos se descargan de un servicio y se suben a otro"],
+"Отчёт каждый месяц собирают из нескольких выгрузок Excel": ["Every month a report is pieced together from several Excel exports", "Cada mes el informe se arma a partir de varias exportaciones de Excel"],
+"У сервиса есть API, но подключить его некому": ["A service has an API, but nobody to connect it", "El servicio tiene API, pero nadie que la conecte"],
+"Сотрудник часами повторяет одну и ту же операцию в программе": ["Someone spends hours repeating the same operation in a program", "Un empleado repite durante horas la misma operación en un programa"],
+"Учёт держится на разросшихся Google-таблицах": ["Your records live in overgrown Google Sheets", "La gestión depende de hojas de Google que no paran de crecer"],
+"Услуги": ["Services", "Servicios"],
+"Что я делаю": ["What I do", "Qué hago"],
+"Интеграции по API": ["API integrations", "Integraciones por API"],
+"Связываю программы, которые не умеют обмениваться данными: TMS, ЭДО, 1С, Google Таблицы, почту. Без дублей и ошибочных отправок.": ["I connect programs that can't exchange data on their own: TMS, e-document systems, 1C, Google Sheets, email. No duplicates and no mistaken submissions.", "Conecto programas que no saben intercambiar datos: TMS, sistemas de documentos electrónicos, 1C, Google Sheets, correo. Sin duplicados ni envíos erróneos."],
+"Пример:": ["Example:", "Ejemplo:"],
+"накладные из Контура сами попадают в нужные заявки CARGO.RUN": ["waybills from Kontur land in the right CARGO.RUN orders automatically", "los albaranes de Kontur llegan solos a los pedidos correctos de CARGO.RUN"],
+"Макросы": ["Macros", "Macros"],
+"VBA для CorelDRAW, Excel и других программ. Удобное окно, справочники, проверка данных. Работа на час превращается в одну кнопку.": ["VBA for CorelDRAW, Excel and other programs. A convenient window, reference lists, data validation. An hour of work becomes one button.", "VBA para CorelDRAW, Excel y otros programas. Ventana cómoda, catálogos, validación de datos. Una hora de trabajo se convierte en un botón."],
+"раскладка этикеток на вал печатной машины в CorelDRAW": ["laying out labels on a printing press cylinder in CorelDRAW", "distribución de etiquetas en el cilindro de una impresora en CorelDRAW"],
+"Скрипты и обработка файлов": ["Scripts and file processing", "Scripts y procesamiento de archivos"],
+"Сборка отчётов, распознавание сканов, сверки и расчёты. Перетащили файлы на значок — получили результат.": ["Report building, scan recognition, reconciliations and calculations. Drag the files onto an icon and get the result.", "Generación de informes, reconocimiento de escaneos, conciliaciones y cálculos. Arrastre los archivos sobre un icono y obtenga el resultado."],
+"итоговый отчёт по водителям и топливу из трёх выгрузок": ["a summary report on drivers and fuel built from three exports", "informe final de conductores y combustible a partir de tres exportaciones"],
+"Сервисы под ключ": ["Turnkey services", "Servicios llave en mano"],
+"Программы для Windows и веб-сервисы с базой данных: от прототипа на ваших таблицах до рабочей системы.": ["Windows applications and web services with a database: from a prototype built on your spreadsheets to a production system.", "Programas para Windows y servicios web con base de datos: desde un prototipo sobre sus hojas de cálculo hasta un sistema en producción."],
+"реестр водителей с распознаванием документов и отправкой в ОТК": ["a driver registry with document recognition and submission to OTK", "registro de conductores con reconocimiento de documentos y envío a OTK"],
+"Кейсы": ["Case studies", "Casos"],
+"Крупные проекты, которые уже работают": ["Large projects already in operation", "Proyectos grandes que ya están en marcha"],
+"Было": ["Before", "Antes"],
+"Стало": ["After", "Ahora"],
+"Грузоперевозки · API и распознавание документов": ["Freight transport · API and document recognition", "Transporte de carga · API y reconocimiento de documentos"],
+"Документы перевозок сами прикрепляются к рейсам": ["Shipping documents attach themselves to trips", "Los documentos de transporte se adjuntan solos a los viajes"],
+"Документовед вручную искал заявку в CARGO.RUN под каждую накладную, доверенность и счёт. При двух рейсах в день по одному маршруту документы путались.": ["A document clerk searched CARGO.RUN by hand for the order matching each waybill, power of attorney and invoice. With two trips a day on the same route, documents got mixed up.", "Un administrativo buscaba a mano en CARGO.RUN el pedido de cada albarán, poder y factura. Con dos viajes al día por la misma ruta, los documentos se confundían."],
+"Электронные накладные забираются из Контура, сканы распознаются, программа находит рейс и прикрепляет файл через API. Всё спорное остаётся человеку с понятной причиной.": ["Electronic waybills are pulled from Kontur, scans are recognized, and the program finds the trip and attaches the file via API. Anything ambiguous is left to a person, with a clear reason.", "Los albaranes electrónicos se descargan de Kontur, los escaneos se reconocen y el programa encuentra el viaje y adjunta el archivo por API. Todo lo dudoso queda para una persona, con un motivo claro."],
+"Python · OCR · CARGO.RUN API · Контур.Логистика API · Яндекс 360": ["Python · OCR · CARGO.RUN API · Kontur.Logistics API · Yandex 360", "Python · OCR · CARGO.RUN API · Kontur.Logistics API · Yandex 360"],
+"44 из 60": ["44 of 60", "44 de 60"],
+"документов прикрепляются автоматически, было 30": ["documents attached automatically, up from 30", "documentos se adjuntan solos, antes eran 30"],
+"ошибочных и повторных прикреплений": ["wrong or duplicate attachments", "adjuntos erróneos o duplicados"],
+"автотеста проверяют каждый выпуск": ["automated tests check every release", "pruebas automáticas verifican cada versión"],
+"Логистика · сервис под ключ": ["Logistics · turnkey service", "Logística · servicio llave en mano"],
+"Данные водителя в заявку за минуту вместо ручного ввода": ["Driver data into an order in a minute, no manual typing", "Datos del conductor en el pedido en un minuto, sin teclearlos"],
+"Логист перепечатывал около двадцати полей с паспорта, ВУ и двух СТС на каждый рейс. Ошибка в цифре — заявку возвращают.": ["For every trip, a logistics coordinator retyped about twenty fields from a passport, a driver's license and two vehicle registration certificates. One wrong digit and the order was sent back.", "En cada viaje, el logista copiaba a mano unos veinte campos del pasaporte, el permiso de conducir y dos certificados de registro del vehículo. Un dígito equivocado y el pedido se devolvía."],
+"Сканы раскладываются по карточкам, поля распознаются и проверяются. Одной кнопкой данные уходят на проверку в ОТК и в Google Таблицу, а расширение браузера заполняет заявку на площадке.": ["Scans are sorted into cards, and fields are recognized and validated. One button sends the data to OTK for verification and into a Google Sheet, and a browser extension fills in the order on the freight platform.", "Los escaneos se ordenan en fichas y los campos se reconocen y validan. Con un botón los datos van a OTK para su verificación y a una hoja de Google, y una extensión del navegador rellena el pedido en la plataforma."],
+"Python · FastAPI · OCR · ОТК API · Google Sheets API · Chrome": ["Python · FastAPI · OCR · OTK API · Google Sheets API · Chrome", "Python · FastAPI · OCR · OTK API · Google Sheets API · Chrome"],
+"~10 сек": ["~10 sec", "~10 s"],
+"на распознавание документа": ["to recognize a document", "para reconocer un documento"],
+"1 файл": ["1 file", "1 archivo"],
+"установщик, без прав администратора": ["installer, no admin rights needed", "instalador, sin permisos de administrador"],
+"персональных данных уходит в облако": ["personal data sent to the cloud", "datos personales enviados a la nube"],
+"Производство · интеграция с 1С": ["Manufacturing · 1C integration", "Producción · integración con 1C"],
+"Документы производства в 1С заполняются и проводятся по кнопке": ["Production documents in 1C are filled in and posted with one button", "Los documentos de producción en 1C se rellenan y contabilizan con un botón"],
+"Бухгалтер вручную переносил строки из общей Google-таблицы в документы производства 1С, заполнял реквизиты и проводил каждый документ.": ["An accountant copied rows by hand from a shared Google Sheet into 1C production documents, filled in the details and posted each document.", "Un contable pasaba a mano las filas de una hoja de Google compartida a los documentos de producción de 1C, rellenaba los datos y contabilizaba cada documento."],
+"Скрипт готовит из таблиц файл для загрузки. Внешняя обработка 1С по кнопке подтягивает в документ нужные строки, ставит реквизиты, проводит документ и записывает журнал операций.": ["A script prepares an import file from the spreadsheets. At the press of a button, a custom 1C add-on pulls the right rows into the document, fills in the details, posts it and writes an operations log.", "Un script prepara un archivo de carga a partir de las hojas. Con un botón, un complemento externo de 1C trae al documento las filas necesarias, rellena los datos, lo contabiliza y anota la operación en un registro."],
+"Google Sheets · CSV · 1С:УНФ · внешняя обработка 1С": ["Google Sheets · CSV · 1C:UNF · custom 1C add-on", "Google Sheets · CSV · 1C:UNF · complemento externo de 1C"],
+"10 мин → 5 сек": ["10 min → 5 sec", "10 min → 5 s"],
+"на один документ: было минимум 10 минут ручной работы": ["per document: it used to take at least 10 minutes by hand", "por documento: antes eran al menos 10 minutos de trabajo manual"],
+"0 ошибок": ["0 errors", "0 errores"],
+"в реквизитах: строки и поля подставляются из таблицы": ["in the details: rows and fields come straight from the spreadsheet", "en los datos: filas y campos se toman directamente de la hoja"],
+"1 кнопка": ["1 button", "1 botón"],
+"документ заполнен, проведён, операция записана в журнал": ["the document is filled in, posted and logged", "documento rellenado, contabilizado y registrado"],
+"Производство и сервис · веб-сервис": ["Manufacturing and service · web service", "Producción y servicio técnico · servicio web"],
+"Сервис-менеджер собирает замену по рекламации сам, без инженера": ["Service managers put together warranty replacements on their own, without an engineer", "El gestor de servicio prepara el reemplazo por reclamación sin ayuda de un ingeniero"],
+"Сервис-менеджеры не знают тонкостей конструкции: из чего состоит узел и по какой спецификации он делается. На каждый доп или рекламацию они шли к инженерам, и те отвлекались от своей работы. Всё занимало много времени.": ["Service managers don't know the finer points of the design: what an assembly is made of and what specification it's built to. For every add-on order or warranty claim they went to the engineers, pulling them away from their own work. Everything took a long time.", "Los gestores de servicio no conocen los detalles del diseño: de qué se compone un conjunto y con qué especificación se fabrica. Por cada pedido adicional o reclamación acudían a los ingenieros, que tenían que dejar su trabajo. Todo llevaba mucho tiempo."],
+"Приложение «Сервисная корзина»: менеджер вводит номер заказа, видит изделие деревом и отмечает элемент, который нужно заменить. Сразу получает полную спецификацию до материалов и готовый файл для вставки в 1С.": ["The “Service Cart” app: the manager enters the order number, sees the product as a tree and marks the part to replace. They instantly get the full specification down to materials and a file ready to paste into 1C.", "La aplicación «Carrito de servicio»: el gestor introduce el número de pedido, ve el producto en forma de árbol y marca el elemento que hay que reemplazar. Al instante obtiene la especificación completa hasta los materiales y un archivo listo para pegar en 1C."],
+"Веб · дерево изделия из базы производства · выгрузка для 1С": ["Web · product tree from the production database · export for 1C", "Web · árbol del producto desde la base de producción · exportación para 1C"],
+"отвлечений инженеров: менеджер справляется сам": ["interruptions for engineers: the manager handles it alone", "interrupciones a los ingenieros: el gestor lo resuelve solo"],
+"Сразу": ["Instant", "Al instante"],
+"полная спецификация узла до материалов": ["full assembly specification down to materials", "especificación completa del conjunto hasta los materiales"],
+"с данными для вставки в 1С": ["with data ready to paste into 1C", "con los datos listos para pegar en 1C"],
+"Флексопечать · макрос": ["Flexo printing · macro", "Flexografía · macro"],
+"Раскладка этикеток в CorelDRAW одной кнопкой": ["Label layout in CorelDRAW with one button", "Distribución de etiquetas en CorelDRAW con un botón"],
+"Дизайнер вручную раскладывал этикетки по валу, сжимал на дисторсию, ставил рельсы с метками и подписывал краски.": ["A designer laid out labels around the cylinder by hand, applied distortion compensation, added rails with marks and labeled the inks.", "El diseñador distribuía a mano las etiquetas en el cilindro, aplicaba la compensación de distorsión, colocaba los raíles con marcas y rotulaba las tintas."],
+"Дизайнер выбирает машину, вал и краски из списка. Макрос строит готовый к печати лист в новом документе, исходник не меняется.": ["The designer picks the press, cylinder and inks from a list. The macro builds a print-ready sheet in a new document; the source file stays untouched.", "El diseñador elige la máquina, el cilindro y las tintas de una lista. La macro genera una hoja lista para imprimir en un documento nuevo; el original no se modifica."],
+"0,01 мм": ["0.01 mm", "0,01 mm"],
+"точность геометрии, проверена тестами": ["geometric accuracy, verified by tests", "precisión geométrica, verificada con pruebas"],
+"7–10 дней": ["7–10 days", "7–10 días"],
+"от данных по машинам до сдачи": ["from press data to delivery", "desde los datos de las máquinas hasta la entrega"],
+"установка копированием": ["installed by copying", "se instala copiándolo"],
+"Производство · система под ключ": ["Manufacturing · turnkey system", "Producción · sistema llave en mano"],
+"Система управления производством вместо десятков таблиц": ["A production management system instead of dozens of spreadsheets", "Un sistema de gestión de producción en lugar de decenas de hojas de cálculo"],
+"Учёт в связанных Google-таблицах, 1С и PDM. Себестоимость и состав изделий расходились, закупка и цех видели разные данные.": ["Records were spread across linked Google Sheets, 1C and PDM. Costs and product structures didn't match, and purchasing and the shop floor saw different data.", "La gestión estaba repartida entre hojas de Google enlazadas, 1C y PDM. Los costes y la composición de los productos no coincidían; compras y taller veían datos distintos."],
+"Одна база с единым справочником: каталог и цены, расчёт себестоимости, закупки, склады, планирование цехов. Данные из 1С, PDM, Битрикс24 и таблиц подтягиваются сами.": ["One database with a single master catalog: products and prices, cost calculation, purchasing, warehouses, shop-floor planning. Data from 1C, PDM, Bitrix24 and spreadsheets flows in automatically.", "Una sola base de datos con un catálogo único: productos y precios, cálculo de costes, compras, almacenes, planificación de talleres. Los datos de 1C, PDM, Bitrix24 y las hojas se cargan solos."],
+"C# · .NET · MS SQL Server · 1С:УНФ · SolidWorks PDM · Битрикс24": ["C# · .NET · MS SQL Server · 1C:UNF · SolidWorks PDM · Bitrix24", "C# · .NET · MS SQL Server · 1C:UNF · SolidWorks PDM · Bitrix24"],
+"приложения на одной базе": ["applications on one database", "aplicaciones sobre una sola base"],
+"внешние системы подключены": ["external systems connected", "sistemas externos conectados"],
+"изменений за полгода разработки": ["changes over six months of development", "cambios en seis meses de desarrollo"],
+"Небольшие задачи": ["Smaller tasks", "Tareas pequeñas"],
+"Не нужна большая система? Хватит небольшого решения": ["Don't need a big system? A small solution will do", "¿No necesita un gran sistema? Basta con una solución pequeña"],
+"Часть задач решается за несколько дней: скрипт, который сотрудник запускает сам, или простое приложение под одну задачу. Вот три такие.": ["Some tasks take just a few days: a script an employee runs on their own, or a simple app built for one job. Here are three.", "Algunas tareas se resuelven en pocos días: un script que el empleado ejecuta por sí mismo o una aplicación sencilla para una sola tarea. Aquí tiene tres."],
+"Отчёт из трёх выгрузок": ["A report from three exports", "Un informe a partir de tres exportaciones"],
+"Каждый месяц водителей, заявки и топливо сводили вручную. Теперь сотрудник перетаскивает три файла на значок и сразу получает итоговый отчёт с листом расхождений.": ["Every month, drivers, orders and fuel were reconciled by hand. Now an employee drags three files onto an icon and instantly gets a summary report with a discrepancies sheet.", "Cada mes se cruzaban a mano conductores, pedidos y combustible. Ahora el empleado arrastra tres archivos sobre un icono y obtiene al instante el informe final con una hoja de discrepancias."],
+"Планирование транспорта": ["Transport planning", "Planificación del transporte"],
+"Оптимальная погрузка по машинам": ["Optimal truck loading", "Carga óptima de camiones"],
+"Указываете, какие грузы и сколько они весят, и какие машины есть в наличии. Расчёт подбирает раскладку без перегруза и с минимумом рейсов и выдаёт план по каждой машине в Excel. На реальной задаче: 299 свай десяти типов на 73 машины по 21,5 и 27 т.": ["You enter the cargo, its weight and which trucks are available. The calculation finds a loading plan with no overloading and the fewest trips, and outputs a plan for each truck in Excel. On a real job: 299 piles of ten types onto 73 trucks of 21.5 and 27 t.", "Usted indica qué cargas hay, cuánto pesan y qué camiones tiene disponibles. El cálculo encuentra una distribución sin sobrecarga y con el mínimo de viajes, y entrega en Excel el plan de cada camión. En un caso real: 299 pilotes de diez tipos en 73 camiones de 21,5 y 27 t."],
+"Мобильное приложение": ["Mobile app", "Aplicación móvil"],
+"«Витрина в кармане» для мастера": ["“Pocket Showcase” for a craftsman", "«Escaparate de bolsillo» para un artesano"],
+"Мастер рассылал клиентам фото и цены в личку по одному. Сделал ему каталог в телефоне: он сам добавляет товары, цены и скидки и делится одной ссылкой. Клиент смотрит весь ассортимент и сразу пишет мастеру. Витрину можно сохранить на главный экран и открывать как обычное приложение.": ["The craftsman used to send photos and prices to customers one by one in private messages. I built him a catalog on his phone: he adds products, prices and discounts himself and shares a single link. Customers browse the whole range and message him right away. The showcase can be saved to the home screen and opened like a regular app.", "El artesano enviaba fotos y precios a cada cliente por mensaje privado, uno por uno. Le hice un catálogo en el teléfono: él mismo añade productos, precios y descuentos y comparte un solo enlace. El cliente ve todo el surtido y le escribe enseguida. El escaparate se puede guardar en la pantalla de inicio y abrir como una aplicación normal."],
+"Открыть витрину →": ["Open the showcase →", "Abrir el escaparate →"],
+"Как работаю": ["How I work", "Cómo trabajo"],
+"Четыре шага от задачи до результата": ["Four steps from task to result", "Cuatro pasos de la tarea al resultado"],
+"Обсуждение": ["Discussion", "Conversación"],
+"Рассказываете задачу, показываете файлы или экран. Называю срок и цену.": ["You describe the task and show me the files or your screen. I give you a timeline and a price.", "Me cuenta la tarea y me muestra los archivos o la pantalla. Le doy plazo y precio."],
+"Аванс 20 %": ["20% deposit", "Anticipo del 20 %"],
+"Фиксируем в переписке, что должно получиться, и я начинаю.": ["We agree in writing on what the result should be, and I get started.", "Dejamos por escrito qué debe resultar y empiezo."],
+"Проверка": ["Testing", "Prueba"],
+"Прогоняю решение на ваших настоящих данных и показываю результат.": ["I run the solution on your real data and show you the result.", "Pruebo la solución con sus datos reales y le muestro el resultado."],
+"Сдача": ["Delivery", "Entrega"],
+"Ставлю у вас, вы проверяете и оплачиваете остаток.": ["I install it for you; you check it and pay the balance.", "La instalo en su equipo; usted la revisa y paga el resto."],
+"Что входит в каждый проект": ["What every project includes", "Qué incluye cada proyecto"],
+"Установка одним файлом и короткая инструкция": ["Single-file installation and a short guide", "Instalación con un solo archivo y una guía breve"],
+"Защита от дублей и ошибок, ключи и пароли не попадают в логи": ["Protection against duplicates and errors; keys and passwords never end up in logs", "Protección contra duplicados y errores; claves y contraseñas nunca quedan en los registros"],
+"Доработки по вашим замечаниям, пока всё не работает как договорились": ["Revisions based on your feedback until everything works as agreed", "Ajustes según sus comentarios hasta que todo funcione como acordamos"],
+"Месяц помощи после сдачи, если что-то пошло не так": ["A month of support after delivery in case something goes wrong", "Un mes de soporte tras la entrega por si algo falla"],
+"Вопросы": ["Questions", "Preguntas"],
+"Частые вопросы": ["Frequently asked questions", "Preguntas frecuentes"],
+"Сколько стоит?": ["How much does it cost?", "¿Cuánto cuesta?"],
+"Цена зависит от многих деталей: какие программы участвуют, в каком виде данные, сколько исключений нужно учесть. Поэтому точную стоимость называю после обсуждения задачи и до начала работы. Для ориентира:": ["The price depends on many details: which programs are involved, what form the data is in, how many exceptions need handling. So I quote an exact price after we discuss the task and before work begins. As a guide:", "El precio depende de muchos detalles: qué programas intervienen, en qué formato están los datos, cuántas excepciones hay que contemplar. Por eso doy el precio exacto después de hablar de la tarea y antes de empezar. Como referencia:"],
+"час работы — около 2 000 ₽": ["one hour of work is about $25", "una hora de trabajo cuesta unos 25 €"],
+"Что если у нашей программы нет API?": ["What if our software has no API?", "¿Y si nuestro programa no tiene API?"],
+"Есть другие пути. Например, расширение для Google Chrome, которое само заполняет формы на сайте сервиса: так сделано для торговой площадки в кейсе с водителями. Ещё варианты — обмен через папку, выгрузки Excel и CSV, макрос внутри программы. Подберу рабочий.": ["There are other ways. For example, a Google Chrome extension that fills in forms on the service's website by itself, as in the driver case with the freight platform. Other options are exchange via a shared folder, Excel and CSV exports, or a macro inside the program. I'll find one that works.", "Hay otros caminos. Por ejemplo, una extensión de Google Chrome que rellena sola los formularios en la web del servicio, como en el caso de los conductores con la plataforma de carga. Otras opciones: intercambio a través de una carpeta, exportaciones Excel y CSV o una macro dentro del programa. Encontraré la que funcione."],
+"Нам нужно что-то устанавливать или покупать?": ["Do we need to install or buy anything?", "¿Tenemos que instalar o comprar algo?"],
+"Обычно нет. Решение ставится одним файлом на ваш компьютер, без прав администратора и без платных подписок.": ["Usually not. The solution installs as a single file on your computer, with no admin rights and no paid subscriptions.", "Normalmente no. La solución se instala con un solo archivo en su ordenador, sin permisos de administrador ni suscripciones de pago."],
+"Что будет, если что-то сломается после сдачи?": ["What if something breaks after delivery?", "¿Qué pasa si algo falla después de la entrega?"],
+"Месяц после сдачи помогаю бесплатно. Программы пишут понятный журнал, поэтому причину обычно видно сразу, даже без доступа к вашему компьютеру.": ["For a month after delivery I help free of charge. The programs keep a clear log, so the cause is usually visible right away, even without access to your computer.", "Durante un mes tras la entrega ayudo gratis. Los programas llevan un registro claro, así que la causa suele verse enseguida, incluso sin acceso a su ordenador."],
+"Работаете с частными лицами?": ["Do you work with individuals?", "¿Trabaja con particulares?"],
+"Да. Работаю и с компаниями, и с частными заказчиками.": ["Yes. I work with both companies and private clients.", "Sí. Trabajo tanto con empresas como con clientes particulares."],
+"Расскажите, что у вас делается вручную": ["Tell me what you still do by hand", "Cuénteme qué hacen todavía a mano"],
+"Напишите, как есть, даже если задача кажется запутанной. Вместе разберёмся в процессе и найдём решение, которое сэкономит вашим сотрудникам время.": ["Write to me as it is, even if the task seems tangled. Together we'll figure out the process and find a solution that saves your team time.", "Escríbame tal cual, aunque la tarea parezca enrevesada. Juntos entenderemos el proceso y encontraremos una solución que ahorre tiempo a su equipo."],
+"Написать в Telegram": ["Message me on Telegram", "Escribir por Telegram"],
+"Почта": ["Email", "Correo"],
+"Телефон": ["Phone", "Teléfono"],
+"Копировать": ["Copy", "Copiar"],
+"Скопировано": ["Copied", "Copiado"],
+"Нажмите Ctrl+C": ["Press Ctrl+C", "Pulse Ctrl+C"],
+"Александр Максимовских · Челябинск, работаю удалённо": ["Alexander Maksimovskikh · Chelyabinsk, Russia · working remotely", "Alexander Maksimovskikh · Cheliábinsk, Rusia · trabajo en remoto"]
+};
+var META = {
+  ru: ["Александр Максимовских", "Интеграции по API, макросы, скрипты и сервисы под ключ для логистики и производства."],
+  en: ["Alexander Maksimovskikh — automation", "API integrations, macros, scripts and turnkey services for logistics and manufacturing."],
+  es: ["Alexander Maksimovskikh — automatización", "Integraciones API, macros, scripts y servicios llave en mano para logística y producción."]
+};
+var LANGS = ['ru', 'en', 'es'];
+var currentLang = 'ru';
+var norm = function (s) { return s.replace(/\s+/g, ' ').trim(); };
+var t = function (ru) {
+  var row = I18N[norm(ru)];
+  if (currentLang === 'ru' || !row) return ru;
+  return row[LANGS.indexOf(currentLang) - 1];
+};
+var translateTextNodes = function () {
+  var walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, {
+    acceptNode: function (n) {
+      var p = n.parentNode;
+      if (!p || p.closest('script,style,.copy')) return NodeFilter.FILTER_REJECT;
+      return n.__ru || /[А-Яа-яЁё]/.test(n.nodeValue) ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_REJECT;
+    }
+  });
+  var n;
+  while ((n = walker.nextNode())) {
+    if (n.__ru === undefined) n.__ru = n.nodeValue;
+    var m = n.__ru.match(/^(\s*)[\s\S]*?(\s*)$/);
+    n.nodeValue = m[1] + t(n.__ru) + m[2];
+  }
+};
+var setLang = function (lang) {
+  currentLang = LANGS.indexOf(lang) >= 0 ? lang : 'ru';
+  document.documentElement.lang = currentLang;
+  translateTextNodes();
+  document.querySelectorAll('.copy').forEach(function (b) { b.textContent = t('Копировать'); });
+  document.querySelectorAll('.lang button').forEach(function (b) {
+    b.setAttribute('aria-pressed', String(b.getAttribute('data-lang') === currentLang));
+  });
+  document.title = META[currentLang][0];
+  var desc = document.querySelector('meta[name="description"]');
+  if (desc) desc.setAttribute('content', META[currentLang][1]);
+  try { localStorage.setItem('lang', currentLang); } catch (e) { /* хранилище недоступно — язык не запомнится */ }
+};
+document.querySelectorAll('.lang button').forEach(function (b) {
+  b.addEventListener('click', function () { setLang(b.getAttribute('data-lang')); });
+});
+(function () {
+  var fromUrl = null, saved = null;
+  try { fromUrl = new URLSearchParams(location.search).get('lang'); } catch (e) { fromUrl = null; }
+  try { saved = localStorage.getItem('lang'); } catch (e) { saved = null; }
+  var initial = fromUrl || saved || 'ru';
+  if (initial !== 'ru') setLang(initial);
+})();
+
 document.querySelectorAll('.copy').forEach(function (btn) {
   btn.addEventListener('click', function () {
     var el = document.getElementById(btn.getAttribute('data-copy'));
     var text = el.textContent.trim();
-    var done = function () { btn.textContent = 'Скопировано'; setTimeout(function () { btn.textContent = 'Копировать'; }, 1800); };
+    var done = function () { btn.textContent = t('Скопировано'); setTimeout(function () { btn.textContent = t('Копировать'); }, 1800); };
     var fallback = function () {
       var r = document.createRange(); r.selectNodeContents(el);
       var s = window.getSelection(); s.removeAllRanges(); s.addRange(r);
-      btn.textContent = 'Нажмите Ctrl+C';
+      btn.textContent = t('Нажмите Ctrl+C');
     };
     try { navigator.clipboard.writeText(text).then(done, fallback); } catch (e) { fallback(); }
   });
